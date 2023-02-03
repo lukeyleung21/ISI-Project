@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "vue": "^3.2.47"
+  },
+  "name": "isi-project",
+  "description": "ISI",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukeyleung21/ISI-Project.git"
+  },
+  "author": "Lukey,Nick,Jacky,Steve",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lukeyleung21/ISI-Project/issues"
+  },
+  "homepage": "https://github.com/lukeyleung21/ISI-Project#readme"
+}
