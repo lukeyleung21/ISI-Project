@@ -5,9 +5,10 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-  }
+    path:'/',
+    name:'home',
+    component: () => import('../views/shop.vue')
+}
 ]
 
 const router = new VueRouter({

@@ -2,6 +2,8 @@
   <v-app id="inspire">
     <v-navigation-drawer
         permanent
+        v-model="drawer"
+        app
         expand-on-hover
       >
         <v-list>
@@ -20,7 +22,7 @@
           nav
           dense
         >
-          <v-list-item link>
+          <v-list-item link >
             <v-list-item-icon>
               <v-icon color="green lighten-1" size="30px">mdi-shopping</v-icon>
             </v-list-item-icon>
@@ -42,7 +44,7 @@
       </v-navigation-drawer>
 
     <v-main>
-      <!--  -->
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
