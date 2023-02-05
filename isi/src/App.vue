@@ -4,6 +4,7 @@
         permanent
         v-model="drawer"
         app
+        mini-variant
         expand-on-hover
       >
         <v-list>
