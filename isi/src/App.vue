@@ -1,55 +1,56 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
+  <v-app id="inspire">
+    <v-navigation-drawer
+        permanent
+        v-model="drawer"
+        app
+        expand-on-hover
       >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
+        <v-list>
+          <v-list-item to="personal" link>
+            <v-list-item-content>
+              <v-list-item-title class="text-h6">
+                Username Here
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+
+        <v-divider></v-divider>
+
+        <v-list
+          nav
+          dense
+        >
+          <v-list-item to="shop" link >
+            <v-list-item-icon>
+              <v-icon color="green lighten-1" size="30px">mdi-shopping</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Shopping Area</v-list-item-title>
+          </v-list-item>
+          <v-list-item to="trolley" link>
+            <v-list-item-icon>
+              <v-icon color="amber accent-2" size="30px">mdi-cart</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Trolly</v-list-item-title>
+          </v-list-item>
+          <v-list-item to="favourite" link>
+            <v-list-item-icon>
+              <v-icon color="blue-grey lighten-3" size="30px">mdi-star</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Favourite</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-navigation-drawer>
 
     <v-main>
-      <router-view/>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
 
 <script>
-
-export default {
-  name: 'App',
-
-  data: () => ({
+  export default {
     //
-  }),
-};
+  }
 </script>
