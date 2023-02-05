@@ -1,5 +1,5 @@
 <template>
-    Trolly
+<p>Trolley</p>
 </template>
 <script>
 

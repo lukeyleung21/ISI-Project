@@ -1,5 +1,5 @@
 <template>
-favourite
+<p>favourite</p>
 </template>
 <script>
 
