@@ -11,7 +11,8 @@
           <v-list-item to="personal" link>
             <v-list-item-content>
               <v-list-item-title class="text-h6">
-                Username Here
+                <p v-if="login == 1">Username</p>
+                <p v-else>Login | Sign up</p>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -29,18 +30,19 @@
             </v-list-item-icon>
             <v-list-item-title>Shopping Area</v-list-item-title>
           </v-list-item>
-          <v-list-item to="trolley" link>
+          <v-list-item v-if="login == 1" to="trolley" link>
             <v-list-item-icon>
               <v-icon color="amber accent-2" size="30px">mdi-cart</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Trolly</v-list-item-title>
           </v-list-item>
-          <v-list-item to="favourite" link>
+          <v-list-item v-if="login == 0" to="personal" link>
             <v-list-item-icon>
-              <v-icon color="blue-grey lighten-3" size="30px">mdi-star</v-icon>
+              <v-icon color="amber accent-2" size="30px">mdi-cart</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Favourite</v-list-item-title>
+            <v-list-item-title>Trolly</v-list-item-title>
           </v-list-item>
+          
         </v-list>
       </v-navigation-drawer>
 
@@ -53,5 +55,8 @@
 <script>
   export default {
     //
+    data() {
+      return { login: 0 }
+    }
   }
 </script>
