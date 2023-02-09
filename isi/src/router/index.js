@@ -15,11 +15,6 @@ const routes = [
     component: ()=> import('../views/trolley.vue')
   },
   {
-    path:'/favourite',
-    name:'favourite',
-    component: ()=> import('../views/favourite.vue')
-  },
-  {
     path:'/personal',
     name:'personal',
     component: ()=> import('../views/personal.vue')

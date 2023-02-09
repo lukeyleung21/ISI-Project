@@ -5,38 +5,136 @@
 <h1>Electric Appliance Shop🛒</h1>
 </v-col>
 <v-col>
+<v-row>
+  <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+  <v-btn
+      class="mt-2 mr-3"
+      fab
+      dark
+      color="green"
+      @click="overlay = !overlay"
+    >
+      <v-icon dark>
+        mdi-filter
+      </v-icon>
+    </v-btn>
+      </template>
+      <v-list>
+        <v-list-item
+          v-for="(item, index) in items"
+          :key="index"
+        >
+          <v-list-item-title></v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
 <v-text-field
 lg="6"
 solo
 label="Search Here🔍"
-v-model="search"
+class="mt-3 mr-3"
+v-model="search.name"
 ></v-text-field>
-</v-col>
+</v-row></v-col>
 </v-row>
 <v-divider></v-divider>
-Developing Here
-<v-divider></v-divider>
 <v-row>
-<v-card v-for="item in items" max-width="400" class="mx-16 my-15">
+<v-card v-for="item in items" max-width="400" class="mx-16 my-15" v-if="search.name=='' || search.name == item.name" >
 <v-img
       height="250"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-    ></v-img>
+      width="450"
+      :src= item.image
+          ></v-img>
     <v-card-title>{{ item.name }}</v-card-title>
-    Information Here....
+
+    <v-card-text>
+      <v-row
+        align="center"
+        class="mx-0"
+      ><v-col>
+        <div class="grey--text">
+          ♦Brand : {{ item.brand }}
+        </div></v-col>    </v-row>    </v-card-text>
+        <v-card-title>
+              <div class="mt-5" style="font-size: x-large; color: darkseagreen;">
+        ${{item.price}}
+      </div></v-card-title>
+  
+
+
+    <v-divider></v-divider>
+
+    <v-card-title>
+    <p v-if="!item.outOfStock">Product Avaliable</p>
+    <p v-else>Out Of Stock</p>
+    </v-card-title>
+
+    <v-card-text>
+      <v-row>
+          <v-col
+            cols="6"
+            sm="3"
+          >Favourite
+            <v-btn
+              icon
+              color="pink"
+              class="ml-3"
+              @click="favourite(items.productID)"
+            >
+              <v-icon>mdi-heart</v-icon>
+            </v-btn>
+          </v-col>
+          <v-col
+          cols="6"
+            sm="3">
+
+          </v-col>
+   <v-btn
+  color="secondary"
+  elevation="3"
+  outlined
+  rounded
+  x-large
+  @click="detailRoute()"
+>Detail</v-btn>
+          </v-row>
+
+    </v-card-text>
+    
 </v-card>
 </v-row>
 </v-container>
 </template>
 
 <script>
+const api = "http://localhost:8000/shop"
 export default{
   data(){
     return{
-      search : '',
-      items:[{name:'test1',price:'50'},{name:'test2',price:'50'},{name:'test3',price:'50'},{name:'test4',price:'50'},{name:'test5',price:'50'}
-  ]
+      search:{
+        name:'',
+        brand:'',
+        price1:0,
+        price2:0,
+        prop1:'',
+        prop2:''
+      },
+      items:[
+
+  ],
+      overlay :false,
+      filter: false,
+      brand:[]
     }
+  },
+  mounted:function(){
+    fetch(api).then((res)=>res.json()).then((data)=>this.items = data).then(this.brand = [...new Set(this.items.brand)])
+  },
+  methods:{
+    detailRoute(){
+      console.log(this.brand)
+    }
+  },
   }
-}
 </script>

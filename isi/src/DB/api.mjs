@@ -3,7 +3,7 @@ sqlite3.verbose();
 import { open } from "sqlite";
 
 const db = await open({
-  filename: "../db.sqlite",
+  filename: "./db.sqlite",
   driver: sqlite3.Database
 });
 
