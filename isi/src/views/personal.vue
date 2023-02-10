@@ -1,52 +1,80 @@
 <template>
-    <form>
-        <v-text-field v-model="email" :error-messages="emailErrors" label="E-mail" required @input="$v.email.$touch()" @blur="$v.email.$touch()"></v-text-field>
-        <v-text-field type="password" v-model="pw" :error-messages="pwErrors" label="Password" required @input="$v.pw.$touch()" @blur="$v.pw.$touch()"></v-text-field>
-
-        <v-btn class="mr-4" @click="login" >Login</v-btn>
-        <v-btn to="/register" link>Sign Up</v-btn>
-    </form>
+    <v-simple-table v-if="this.$store.getters.userID == '0'" height="300px">
+        <template v-slot:default>
+        <thead>
+        <tr>
+        <th class="text-left">Full Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Vendor</td>
+        </tr>
+        
+        </tbody>
+        <p></p>
+        <v-btn class="mr-4" @click="logout">Logout</v-btn>
+        </template>
+    </v-simple-table>
+    <v-simple-table v-else height="300px">
+        <template v-slot:default>
+        <thead>
+        <tr>
+        <th class="text-left">Full Name</th>
+        <th class="text-left">Email</th>
+        <th class="text-left">Address</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ userData.fName }}</td>
+            <td>{{ userData.email }}</td>
+            <td>{{ userData.address }}</td>
+        </tr>
+        
+        </tbody>
+        <p></p>
+        <v-btn class="mr-4" to="changePassword" link>Change password</v-btn>
+        <v-btn class="mr-4" @click="logout">Logout</v-btn>
+        </template>
+    </v-simple-table>
 
 </template>
 
 <script>
-    import { validationMixin } from 'vuelidate'
-    import { required, maxLength, email, minLength } from 'vuelidate/lib/validators'
+import router from '@/router'
 
-    export default {
-        mixins: [validationMixin],
-
-        validations: {
-            email: { required, email },
-            pw: { required, minLength: minLength(6) },
+export default {
+    data: () => ({
+        userData: [],
+    }),
+    async created(){
+        await this.checkUser();
+    },
+    methods: {
+        checkUser:async function() {
+            if (this.$store.getters.userID == '') { 
+                router.push("/login");
+            } else if (this.$store.getters.userID == '0') {
+                this.userData = { fName: 'Vendor', email: 'No', address: 'No'}
+            } else {
+                const url = 'http://localhost:8000/user/'
+                fetch(url + this.$store.getters.userID)
+                .then((response) => response.json())
+                .then((data) => { 
+                    for (let x in data) {
+                        if (data[x].userID == this.$store.getters.userID) {
+                            this.userData = data[x]
+                            break
+                        }
+                    }
+                });
+            }
         },
-
-        data: () => ({
-            email: '',
-            pw: '',
-        }),
-
-        computed: {
-            emailErrors () {
-                const errors = []
-                if (!this.$v.email.$dirty) return errors
-                !this.$v.email.email && errors.push('Must be valid e-mail')
-                !this.$v.email.required && errors.push('E-mail is required')
-                return errors
-            },
-            pwErrors () {
-                const errors = []
-                if (!this.$v.pw.$dirty) return errors
-                !this.$v.pw.minLength && errors.push('Password must be at least 6 characters long')
-                !this.$v.pw.required && errors.push('Password is required.')
-                return errors
-            },
-        },
-
-        methods: {
-            login () {
-                this.$v.$touch()
-            },
-        },
-    }
+        async logout () {
+            this.$store.commit('logout')
+        }
+    },
+    
+}
 </script>
