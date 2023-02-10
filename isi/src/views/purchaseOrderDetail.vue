@@ -8,7 +8,7 @@ import router from '@/router'
 export default {
     props: ['POIID'],
     data: () => ({
-        id: 3
+        
     }),
 
     async created(){
@@ -16,8 +16,7 @@ export default {
     },
     methods: {
         loadData:async function() {
-            router.push({name: "purchaseOrderDetail", params: { POIID: 2 }})
-            router.push(`/purchaseOrder/${id}`)
+
         },
     }
 }
