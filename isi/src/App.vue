@@ -37,9 +37,9 @@
           </v-list-item>
           <v-list-item to="favourite" link>
             <v-list-item-icon>
-              <v-icon color="blue-grey lighten-3" size="30px">mdi-star</v-icon>
+              <v-icon color="blue-grey lighten-3" size="30px">mdi-newspaper-variant-outline</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Favourite</v-list-item-title>
+            <v-list-item-title>Tracing</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-navigation-drawer>

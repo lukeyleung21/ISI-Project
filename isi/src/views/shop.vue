@@ -22,10 +22,10 @@
       </template>
       <v-list>
         <v-list-item
-          v-for="(item, index) in items"
+          v-for="(brand, index) in brand"
           :key="index"
         >
-          <v-list-item-title></v-list-item-title>
+          <v-list-item-title>{{ brand }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -129,11 +129,18 @@ export default{
     }
   },
   mounted:function(){
-    fetch(api).then((res)=>res.json()).then((data)=>this.items = data).then(this.brand = [...new Set(this.items.brand)])
+    fetch(api).then((res)=>res.json()).then((data)=> {
+      this.items = data
+      for(let x in data){
+        if(this.brand.indexOf(data[x].brand)){
+          this.brand.push(data[x].brand)
+        }
+      }
+    })
   },
   methods:{
     detailRoute(){
-      console.log(this.brand)
+      
     }
   },
   }
