@@ -13,7 +13,7 @@ export default {
     methods: {
         checkUser:async function() {
             if (this.$store.getters.userID == '0') { 
-                router.push("/shop");
+                router.push("/");
             } else if (this.$store.getters.userID == '') {
                 router.push("/login")
             }

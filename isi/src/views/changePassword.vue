@@ -72,7 +72,7 @@ export default {
             if (this.$store.getters.userID == '') { 
                 router.push("/login");
             } else if (this.$store.getters.userID == '0') {
-                router.push("/shop");
+                router.push("/");
             }
         },
         async changePassword () {

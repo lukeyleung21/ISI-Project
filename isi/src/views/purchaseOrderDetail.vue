@@ -16,8 +16,8 @@ export default {
     },
     methods: {
         loadData:async function() {
-            // router.push({name: "purchaseOrderDetail", params: { POIID: 2}})
-            // router.push(`/purchaseOrder/${this.id}`)
+            router.push({name: "purchaseOrderDetail", params: { POIID: 2 }})
+            router.push(`/purchaseOrder/${id}`)
         },
     }
 }

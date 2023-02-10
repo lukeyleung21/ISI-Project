@@ -20,7 +20,7 @@ export default new Vuex.Store({
       var userData = JSON.parse(sessionStorage.getItem("user"))
       state.userID = userData.userID
       state.fName = userData.fName
-      router.push("/shop")
+      router.push("/")
     },
     logout(state) {
       state.userID = ''

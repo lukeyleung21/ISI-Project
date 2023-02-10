@@ -11,6 +11,7 @@ export default {
     }),
     async created(){
         await this.checkUser();
+        await this.loadData();
     },
     methods: {
         checkUser:async function() {
@@ -20,6 +21,9 @@ export default {
                 router.push("/login");
             } 
         },
+        loadData:async function() {
+            
+        }
     },
     
 }

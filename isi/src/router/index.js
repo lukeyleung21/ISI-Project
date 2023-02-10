@@ -10,7 +10,7 @@ const routes = [
     component: () => import('../views/shop.vue')
   },
   {
-    path:'/product/:productID',
+    path:'/product/:productID',   //product detail page
     name:'product',
     props: true,
     component: () => import('../views/product.vue')
@@ -36,12 +36,12 @@ const routes = [
     component: ()=> import('../views/login.vue')
   },
   {
-    path:'/vlogin',
+    path:'/vlogin',   //login for vendor
     name:'vlogin',
     component: ()=> import('../views/vlogin.vue')
   },
   {
-    path:'/purchaseOrder',
+    path:'/purchaseOrder',    //purchase order for vendor
     name:'purchaseOrder',
     component: ()=> import('../views/purchaseOrder.vue')
   },
@@ -52,7 +52,7 @@ const routes = [
     component: ()=> import('../views/purchaseOrderDetail.vue')
   },
   {
-    path:'/purchaseTracking',
+    path:'/purchaseTracking',   //purchase order for customer
     name:'purchaseTracking',
     component: ()=> import('../views/purchaseTracking.vue')
   },
