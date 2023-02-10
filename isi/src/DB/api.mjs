@@ -9,13 +9,70 @@ const db = await open({
 
 import express from "express";
 let api = express.Router();
+api.use(express.json());
 
 api.get('/user', async (req, res) => {              //login search
 
-  const q = "SELECT * FROM User";
+  const q = `SELECT * FROM User`;
   try {
     const result = await db.all(q);
     res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+api.get('/user/:userID', async (req, res) => {              //personal data
+  let userID = parseInt(req.params.userID)
+  const q = `SELECT * FROM User WHERE userID = $userID`;
+  try {
+    const result = await db.all(q, userID);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+api.post('/register', async (req, res) => {             //register
+  if (req.body.fName == undefined
+    || req.body.email == undefined
+    || req.body.password == undefined
+    || req.body.address == undefined) {
+    return res.sendStatus(400);
+  }
+
+  let values = {
+    $fName: req.body.fName,
+    $email: req.body.email,
+    $password: req.body.password,
+    $address: req.body.address
+  };
+
+  try {
+    const q = `INSERT INTO User (fName, email, password, address) VALUES ($fName, $email, $password, $address)`;
+
+    const result = await db.run(q, values);
+    var userData = { userID: result.lastID, fName: req.body.fName}
+    res.status(200).json(userData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+api.post('/cpw/:userID', async (req, res) => {              //change pw         
+  if (req.params.userID == undefined) {return res.sendStatus(400); }
+  if (req.body.newPassword == undefined) { return res.sendStatus(400); }
+
+  const value = {
+    $userID: req.params.userID,
+    $newPassword: req.body.newPassword,
+  }
+
+  const q = `UPDATE User SET password = $newPassword WHERE userID = $userID`;
+
+  try {
+    var result = db.run(q, value);
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -31,82 +88,5 @@ api.get('/shop', async (req, res) => {              //products listing
       res.status(500).json(err);
     }
   });
-
-api.delete('/items/:pk', async (req, res) => {
-  if (req.params.pk == undefined) { return res.sendStatus(400); }
-  let pk = parseInt(req.params.pk);
-  try {
-    const q = `DELETE FROM items WHERE pk = ${pk}`;
-    await db.run(q);
-    res.status(200).json({});
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-api.use(express.json());
-
-api.put('/items/:pk', async (req, res) => {
-  if (req.params.pk == undefined) {return res.sendStatus(400); }
-  if (req.body.description == undefined
-    || req.body.priority == undefined
-    || req.body.completed == undefined) {
-    return res.sendStatus(400);
-  }
-  const pk = parseInt(req.params.pk);
-  const valuesUpdateProduct = {
-    $pk: pk,
-    $description: req.body.description,
-    $priority: req.body.priority,
-    $completed: req.body.completed
-  }
-  // todo: further checking on valid values
-
-  const q1 = `UPDATE items SET 
-        description = $description, 
-        priority = $priority, 
-        completed = $completed WHERE pk = $pk`;
-
-  const q2 = "SELECT * FROM items WHERE pk = $pk";
-
-  try {
-    await db.run(q1, valuesUpdateProduct);
-    let result = await db.get(q2, { $pk: pk });
-    res.status(200).json(result);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-api.post('/items', async (req, res) => {
-  if (req.body.description == undefined
-    || req.body.priority == undefined
-    || req.body.completed == undefined) {
-    return res.sendStatus(400);
-  }
-
-  let valuesNewItem = {
-    $description: req.body.description,
-    $priority: req.body.priority,
-    $completed: req.body.completed
-    
-  };
-  // todo: further checking on valid values
-
-  const q1 = `INSERT INTO items (description, priority, completed)
-    VALUES ($description, $priority, $completed)`;
-
-  const q2 = "SELECT * FROM items WHERE pk = $pk";
-
-  try {
-    const insResult = await db.run(q1, valuesNewItem);
-    const pk = insResult.lastID;
-    let result = await db.get(q2, { $pk: pk });
-    res.status(200).json(result);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
 
 export default api;
