@@ -6,10 +6,9 @@
 </v-col>
 </v-row>
 <v-divider></v-divider>
-<!-- Filter Here -->
 <v-row>
 <v-col lg="5">
-<v-card>
+<v-card height="140px" width="500px">
 <v-card-title>
 Brand Filter
 </v-card-title>
@@ -23,7 +22,6 @@ Brand:
   <v-overflow-btn
   filled
   persistent-hint
-  class="mx-10"
   :items="brand"
   label="Filter here"
   v-model=filter_brand
@@ -31,6 +29,56 @@ Brand:
 >
 
 </v-overflow-btn>
+</v-col>
+</v-row>
+</v-card>
+</v-col>
+<v-col>
+  <v-card height="140px" width="500px">
+<v-card-title>
+Price Filter
+</v-card-title>
+<v-row>
+<v-col lg="3">
+<v-card-text>
+Price:
+</v-card-text>
+</v-col>
+<v-col lg="8">
+  <v-row>
+        <v-col class="px-4">
+          <v-range-slider
+            v-model="range"
+            :max="max"
+            :min="min"
+            hide-details
+            class="align-center"
+          >
+            <template v-slot:prepend>
+              <v-text-field
+                :value="range[0]"
+                class="mt-0 pt-0"
+                hide-details
+                single-line
+                type="number"
+                style="width: 60px"
+                @change="$set(range, 0, $event)"
+              ></v-text-field>
+            </template>
+            <template v-slot:append>
+              <v-text-field
+                :value="range[1]"
+                class="mt-0 pt-0"
+                hide-details
+                single-line
+                type="number"
+                style="width: 60px"
+                @change="$set(range, 1, $event)"
+              ></v-text-field>
+            </template>
+          </v-range-slider>
+        </v-col>
+      </v-row>
 </v-col>
 </v-row>
 </v-card>
@@ -103,7 +151,7 @@ Brand:
     
 </v-card>
 
-<v-card v-for="item in search" max-width="400" class="mx-16 my-15" :key="item.brand">
+<v-card v-for="item in search" max-width="400" class="mx-16 my-15" :key="item.brand && item.price">
 <v-img
       height="250"
       width="450"
@@ -180,9 +228,11 @@ export default{
 
       ],
       items:[
-
   ],
   filter_brand:"",
+  price_low:0,
+  price_top:0,
+  range:[0,100],
       brand:[""]
     }
   },
