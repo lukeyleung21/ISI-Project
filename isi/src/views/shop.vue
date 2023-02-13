@@ -103,7 +103,7 @@ Brand:
     
 </v-card>
 
-<v-card v-for="item in search" max-width="400" class="mx-16 my-15" v-else>
+<v-card v-for="item in search" max-width="400" class="mx-16 my-15" :key="item.brand">
 <v-img
       height="250"
       width="450"
@@ -203,8 +203,7 @@ export default{
       this.search= []
       for(let x in this.items){
         if(this.filter_brand == this.items[x].brand){
-          this.search.push(this.items[x])
-          this.$forceUpdate()          
+          this.search.push(this.items[x])        
         }
       }
     }
