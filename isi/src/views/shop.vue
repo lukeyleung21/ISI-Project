@@ -52,38 +52,6 @@ Price:
             hide-details
             :max=static_highest
             class="align-center"
-            v-if="filter_brand==''"
-          >
-            <template v-slot:prepend>
-              <v-text-field
-                :value="range[0]"
-                class="mt-0 pt-0"
-                hide-details
-                single-line
-                type="number"
-                style="width: 60px"
-                @change="$set(range, 0, $event)"
-              ></v-text-field>
-            </template>
-            <template v-slot:append>
-              <v-text-field
-                :value="range[1]"
-                class="mt-0 pt-0"
-                hide-details
-                single-line
-                type="number"
-                style="width: 60px"
-                @change="$set(range, 1, $event)"
-              ></v-text-field>
-            </template>
-          </v-range-slider>
-
-          <v-range-slider
-            v-model="range"
-            hide-details
-            :max=Highest_Price
-            class="align-center"
-            v-else
           >
             <template v-slot:prepend>
               <v-text-field
@@ -118,7 +86,7 @@ Price:
 
 <v-divider></v-divider>
 <v-row>
-<v-card v-for="item in items" max-width="400" class="mx-16 my-15" v-if="filter_brand==''">
+<v-card v-for="item in items" max-width="400" class="mx-16 my-15" v-if="filter_brand=='' && item.price>= range[0] && item.price <=range[1]">
 <v-img
       height="250"
       width="450"
@@ -182,7 +150,7 @@ Price:
     
 </v-card>
 
-<v-card v-for="item in search" max-width="400" class="mx-16 my-15" :key="item.brand && item.price">
+<v-card v-for="item in search" max-width="400" class="mx-16 my-15" :key="item.brand" v-if="item.price>= range[0] && item.price <= range[1]">
 <v-img
       height="250"
       width="450"
@@ -263,7 +231,7 @@ export default{
   filter_brand:"",
   Highest_Price:100,
   static_highest:0,
-  range:[0,this.Highest_Price],
+  range:[0,this.static_highest],
       brand:[""]
     }
   },
@@ -280,6 +248,7 @@ export default{
           this.Highest_Price = this.items[x].price
         }
         this.static_highest = this.Highest_Price
+        this.range=[0,this.static_highest]
     }})
   },
   methods:{
@@ -287,12 +256,10 @@ export default{
     },
     change(){
       this.search= []
-      this.Highest_Price=100
       for(let x in this.items){
-        if(this.filter_brand == this.items[x].brand){
+        if(this.filter_brand == this.items[x].brand && this.items[x].price >= this.range[0] && this.items[x].price <= this.range[1]){
           this.search.push(this.items[x])        
         }
-  
       }
       for(let x in this.search){
         if(this.search[x].price > this.Highest_Price){
