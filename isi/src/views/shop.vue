@@ -49,10 +49,41 @@ Price:
         <v-col class="px-4">
           <v-range-slider
             v-model="range"
-            :max="max"
-            :min="min"
             hide-details
+            :max=static_highest
             class="align-center"
+            v-if="filter_brand==''"
+          >
+            <template v-slot:prepend>
+              <v-text-field
+                :value="range[0]"
+                class="mt-0 pt-0"
+                hide-details
+                single-line
+                type="number"
+                style="width: 60px"
+                @change="$set(range, 0, $event)"
+              ></v-text-field>
+            </template>
+            <template v-slot:append>
+              <v-text-field
+                :value="range[1]"
+                class="mt-0 pt-0"
+                hide-details
+                single-line
+                type="number"
+                style="width: 60px"
+                @change="$set(range, 1, $event)"
+              ></v-text-field>
+            </template>
+          </v-range-slider>
+
+          <v-range-slider
+            v-model="range"
+            hide-details
+            :max=Highest_Price
+            class="align-center"
+            v-else
           >
             <template v-slot:prepend>
               <v-text-field
@@ -230,9 +261,9 @@ export default{
       items:[
   ],
   filter_brand:"",
-  price_low:0,
-  price_top:0,
-  range:[0,100],
+  Highest_Price:100,
+  static_highest:0,
+  range:[0,this.Highest_Price],
       brand:[""]
     }
   },
@@ -243,19 +274,32 @@ export default{
         if(this.brand.indexOf(data[x].brand)){
           this.brand.push(data[x].brand)
         }
-      }
-    })
+        }        
+        for(let x in this.items){
+        if(this.items[x].price > this.Highest_Price){
+          this.Highest_Price = this.items[x].price
+        }
+        this.static_highest = this.Highest_Price
+    }})
   },
   methods:{
     detailRoute(){
     },
     change(){
       this.search= []
+      this.Highest_Price=100
       for(let x in this.items){
         if(this.filter_brand == this.items[x].brand){
           this.search.push(this.items[x])        
         }
+  
       }
+      for(let x in this.search){
+        if(this.search[x].price > this.Highest_Price){
+          this.Highest_Price = this.search[x].price
+        }
+      }
+      
     }
   }
   }
