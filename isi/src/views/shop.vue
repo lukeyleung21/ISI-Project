@@ -26,7 +26,8 @@ Brand:
   class="mx-10"
   :items="brand"
   label="Filter here"
-  v-model=search.brand
+  v-model=filter_brand
+  @change=change()
 >
 
 </v-overflow-btn>
@@ -38,7 +39,7 @@ Brand:
 
 <v-divider></v-divider>
 <v-row>
-<v-card v-for="item in items" max-width="400" class="mx-16 my-15" v-if="search.brand==''">
+<v-card v-for="item in items" max-width="400" class="mx-16 my-15" v-if="filter_brand==''">
 <v-img
       height="250"
       width="450"
@@ -166,7 +167,6 @@ Brand:
     
 </v-card>
 
-
 </v-row>
 </v-container>
 </template>
@@ -198,6 +198,15 @@ export default{
   },
   methods:{
     detailRoute(){
+    },
+    change(){
+      this.search= []
+      for(let x in this.items){
+        if(this.filter_brand == this.items[x].brand){
+          this.search.push(this.items[x])
+          this.$forceUpdate()          
+        }
+      }
     }
   }
   }
