@@ -4,43 +4,41 @@
 <v-col lg="8">
 <h1>Electric Appliance Shop🛒</h1>
 </v-col>
-<v-col>
-<v-row>
-  <v-menu offset-y>
-      <template v-slot:activator="{ on, attrs }">
-  <v-btn
-      class="mt-2 mr-3"
-      fab
-      dark
-      color="green"
-      @click="overlay = !overlay"
-    >
-      <v-icon dark>
-        mdi-filter
-      </v-icon>
-    </v-btn>
-      </template>
-      <v-list>
-        <v-list-item
-          v-for="(brand, index) in brand"
-          :key="index"
-        >
-          <v-list-item-title>{{ brand }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-<v-text-field
-lg="6"
-solo
-label="Search Here🔍"
-class="mt-3 mr-3"
-v-model="search.name"
-></v-text-field>
-</v-row></v-col>
 </v-row>
 <v-divider></v-divider>
+<!-- Filter Here -->
 <v-row>
-<v-card v-for="item in items" max-width="400" class="mx-16 my-15" v-if="search.name=='' || search.name == item.name" >
+<v-col lg="5">
+<v-card>
+<v-card-title>
+Brand Filter
+</v-card-title>
+<v-row>
+<v-col lg="3">
+<v-card-text>
+Brand:
+</v-card-text>
+</v-col>
+<v-col lg="8">
+  <v-overflow-btn
+  filled
+  persistent-hint
+  class="mx-10"
+  :items="brand"
+  label="Filter here"
+  :value="filter_brand"
+>
+
+</v-overflow-btn>
+</v-col>
+</v-row>
+</v-card>
+</v-col>
+</v-row>
+
+<v-divider></v-divider>
+<v-row>
+<v-card v-for="item in items" max-width="400" class="mx-16 my-15" v-if="filter_brand=='' " >
 <v-img
       height="250"
       width="450"
@@ -113,19 +111,16 @@ export default{
   data(){
     return{
       search:{
-        name:'',
         brand:'',
         price1:0,
         price2:0,
-        prop1:'',
-        prop2:''
       },
       items:[
 
   ],
       overlay :false,
-      filter: false,
-      brand:[]
+      filter_brand: "",
+      brand:[""]
     }
   },
   mounted:function(){
@@ -140,7 +135,7 @@ export default{
   },
   methods:{
     detailRoute(){
-      
+      console.log(this.filt1er_brand)
     }
   },
   }
