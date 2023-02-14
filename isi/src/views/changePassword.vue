@@ -69,40 +69,44 @@ export default {
     },
     methods: {
         checkUser:async function() {
-            if (this.$store.getters.userID == '') { 
+            if (this.$store.getters.userType == '2') { 
                 router.push("/login");
-            } else if (this.$store.getters.userID == '0') {
+            } else if (this.$store.getters.userType == '0') {
                 router.push("/");
             }
         },
         async changePassword () {
             this.$v.$touch()
 
-            const url1 = 'http://localhost:8000/user/'
-                fetch(url1 + this.$store.getters.userID)
-                .then((response) => response.json())
-                .then((data) => { 
-                    if (data[0].password == this.oldPassword) {
-                        const url2 = 'http://localhost:8000/cpw/'
-                        fetch(url2 + this.$store.getters.userID, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ newPassword: this.newPassword })
-                        })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            console.log(data)
+            const url1 = 'http://localhost:8000/checkPw/'
+            fetch(url1, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userID: this.$store.getters.userID, password: this.oldPassword })
+            })
+            .then((response) => {
+                if (response.status == 200) {
+                    const url2 = 'http://localhost:8000/cpw/'
+                    fetch(url2 + this.$store.getters.userID, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ newPassword: this.newPassword })
+                    })
+                    .then((response) => {
+                        if (response.status == 200) {
                             this.success = true
                             this.$v.$reset()
                             this.oldPassword = ''
                             this.newPassword = ''
                             this.cnpw = ''
                             this.fail = false
-                        })
-                    } else {
-                        this.fail = true
-                    }
-                });
+                        }
+                    })
+                } else {
+                    this.fail = true
+                }
+            })
+        
         },  
     },
     

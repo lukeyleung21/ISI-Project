@@ -1,5 +1,5 @@
 <template>
-    <v-simple-table v-if="this.$store.getters.userID == '0'" height="300px">
+    <v-simple-table v-if="this.$store.getters.userType == '0'" height="300px">
         <template v-slot:default>
         <thead>
         <tr>
@@ -50,26 +50,21 @@ export default {
     }),
     async created(){
         await this.checkUser();
+        await this.loadData();
     },
     methods: {
         checkUser:async function() {
-            if (this.$store.getters.userID == '') { 
+            if (this.$store.getters.userType == '2') { 
                 router.push("/login");
-            } else if (this.$store.getters.userID == '0') {
-                this.userData = { fName: 'Vendor', email: 'No', address: 'No'}
-            } else {
-                const url = 'http://localhost:8000/user/'
-                fetch(url + this.$store.getters.userID)
-                .then((response) => response.json())
-                .then((data) => { 
-                    for (let x in data) {
-                        if (data[x].userID == this.$store.getters.userID) {
-                            this.userData = data[x]
-                            break
-                        }
-                    }
-                });
-            }
+            } 
+        },
+        loadData:async function() {
+            const url = 'http://localhost:8000/user/'
+            fetch(url + this.$store.getters.userID)
+            .then((response) => response.json())
+            .then((data) => { 
+                for (let x in data) { this.userData = data[x] }
+            });
         },
         async logout () {
             this.$store.commit('logout')
