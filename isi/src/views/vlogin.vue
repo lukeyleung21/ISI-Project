@@ -41,18 +41,21 @@
         },
         methods: {
             checkUser:async function() {
-                if (this.$store.getters.userID != '') { 
+                if (this.$store.getters.userType != '2') { 
                     router.push("/personal");
                 } 
             },
             login () {
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
-                    const url = 'http://localhost:8000/user/0'
-                    fetch(url)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data[0].password == this.password) {
+                    const url = 'http://localhost:8000/checkPw/'
+                    fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userID: '0', password: this.password })
+                    })
+                    .then((response) => {
+                        if (response.status == 200) {
                             sessionStorage.setItem("user", JSON.stringify({ userID: '0', fName: 'Vendor' }))
                             this.$store.commit('login')
                         } else {

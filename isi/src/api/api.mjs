@@ -24,7 +24,7 @@ api.get('/user', async (req, res) => {              //login search
 
 api.get('/user/:userID', async (req, res) => {              //personal data
   let userID = parseInt(req.params.userID)
-  const q = `SELECT * FROM User WHERE userID = $userID`;
+  const q = `SELECT fName, email, address FROM User WHERE userID = $userID`;
   try {
     const result = await db.all(q, userID);
     res.json(result);
@@ -59,6 +59,41 @@ api.post('/register', async (req, res) => {             //register
   }
 });
 
+api.post('/checkPw/', async (req, res) => {  
+  if (req.body.password == undefined) {return res.sendStatus(400); }
+  
+  if (req.body.userID == undefined) {
+    const q = `SELECT * FROM User`;
+    try {
+      const result = await db.all(q);
+
+      for (let x in result) {
+        if (result[x].email == req.body.email && result[x].password == req.body.password) {
+          var userData = { userID: result[x].userID, fName: result[x].fName }
+          res.status(200).json(userData);
+          return;
+        }
+      }
+      res.status(401).json('');
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  } else {
+    let userID = parseInt(req.body.userID)
+    const q = `SELECT password FROM User WHERE userID = $userID`;
+    try {
+      const result = await db.all(q, userID);
+      if (req.body.password == result[0].password) {
+        res.status(200).json();
+      } else {
+        res.status(401).json();
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  }
+});
+
 api.post('/cpw/:userID', async (req, res) => {              //change pw         
   if (req.params.userID == undefined) {return res.sendStatus(400); }
   if (req.body.newPassword == undefined) { return res.sendStatus(400); }
@@ -72,7 +107,7 @@ api.post('/cpw/:userID', async (req, res) => {              //change pw
 
   try {
     var result = db.run(q, value);
-    res.status(200).json(result);
+    res.status(200).json();
   } catch (err) {
     res.status(500).json(err);
   }

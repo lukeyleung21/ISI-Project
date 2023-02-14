@@ -86,7 +86,7 @@ export default {
     },
     methods: {
         checkUser:async function() {
-            if (this.$store.getters.userID != '') { 
+            if (this.$store.getters.userType != '2') { 
                 router.push("/personal");
             } 
         },
