@@ -24,7 +24,7 @@ api.get('/user', async (req, res) => {              //login search
 
 api.get('/user/:userID', async (req, res) => {              //personal data
   let userID = parseInt(req.params.userID)
-  const q = `SELECT * FROM User WHERE userID = $userID`;
+  const q = `SELECT fName, email, address FROM User WHERE userID = $userID`;
   try {
     const result = await db.all(q, userID);
     res.json(result);
@@ -87,6 +87,19 @@ api.get('/shop', async (req, res) => {              //products listing
     } catch (err) {
       res.status(500).json(err);
     }
+  
   });
+
+ api.get('/purchaseOrder', async (req, res) => {          //Vendor purchase order list
+    const q = "SELECT * FROM Purchase_Order";
+
+    try {
+      const result = await db.all(q);
+      console.log(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+  
 
 export default api;
