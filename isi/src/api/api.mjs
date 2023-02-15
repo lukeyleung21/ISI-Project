@@ -129,7 +129,6 @@ api.get('/shop', async (req, res) => {              //products listing
     try {
       const result = await db.all(q);
       res.json(result);
-      console.log(q);
     } catch (err) {
       res.status(500).json(err);
     }
