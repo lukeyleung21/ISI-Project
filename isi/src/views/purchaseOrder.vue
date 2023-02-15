@@ -4,25 +4,20 @@
         <thead>
         <tr>
         <th class="text-left">State</th>
-        <th class="text-left">Full Name</th>
-        <th class="text-left">Email</th>
-        <th class="text-left">Address</th>
-        <th class="text-left">Quantity</th>
+        <th class="text-left">POID</th>
+        <th class="text-left">Name</th>
         <th class="text-left">Total Amount</th>
-        <th class="text-left">Date</th>
+        <th class="text-left">Purchase Date</th>
         </tr>
         </thead>
         <tbody>
-            <tr v-for="userdata in userdata" :key="userdata">
-            <td>{{ userdata.fName }}</td>
-            <td>{{ userdata.email }}</td>
-            <td>{{ userdata.address }}</td>
-            <td>{{ userdata.fName }}</td>
-            <td>{{ userdata.email }}</td>
-            <td>{{ userdata.address }}</td>
-            <td>{{ userdata.address }}</td>
+            <tr v-for="Data in data" :key="Data.status">
+            <td>{{ Data.status }}</td>
+            <td>{{ Data.POID }}</td>
+            <td>{{ Data.fName }}</td>
+            <td>{{ Data.totalAmount }}</td>
+            <td>{{ Data.purchaseDate }}</td>
             </tr>
-       
         </tbody>
         </template>
     </v-simple-table>
@@ -33,10 +28,12 @@ import router from '@/router'
 
 export default {
     data: () => ({
+        data: [],
 
     }),
     async created(){
         await this.checkUser();
+        await this.order();
     },
     methods: {
         checkUser:async function() {
@@ -47,22 +44,15 @@ export default {
             } 
         },
 
-        async orderlist () {
-            fetch('http://localhost:8000/order', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({fName: this.fName, email: this.email, password: this.password, address: this.address})
-            })
+         order:async function () {
+            const url ='http://localhost:8000/purchaseOrder'
+            fetch(url)
             .then((response) => response.json())
             .then((data) => {
+                this.data = data
 
             });
-        },
-
-        async created(){
-        await this.loadData();
-        },
-       
+        },    
     },
     
 }
