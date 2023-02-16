@@ -1,12 +1,12 @@
 <template>
-    <p>PODetail {{ this.POIID }}</p>
+    <p>PODetail {{ this.POID }}</p>
 </template>
     
 <script>
 import router from '@/router'
 
 export default {
-    props: ['POIID'],
+    props: ['POID'],
     data: () => ({
 
     }),

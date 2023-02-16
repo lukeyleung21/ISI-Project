@@ -3,11 +3,12 @@
         <template v-slot:default>
         <thead>
         <tr>
-        <th class="text-left">State</th>
-        <th class="text-left">POID</th>
+        <th class="text-left">Staus</th>
+        <th class="text-left">P.O numbers</th>
         <th class="text-left">Name</th>
-        <th class="text-left">Total Amount</th>
-        <th class="text-left">Purchase Date</th>
+        <th class="text-left">Amount</th>
+        <th class="text-left">Purchase Dates</th>
+        <th class="text-left">Operation</th>
         </tr>
         </thead>
         <tbody>
@@ -17,11 +18,14 @@
             <td>{{ Data.fName }}</td>
             <td>{{ Data.totalAmount }}</td>
             <td>{{ Data.purchaseDate }}</td>
+            <v-btn color="primary" @click="toDetail(Data.POID)">Detail</v-btn>
             </tr>
         </tbody>
+        <v-card variant="tonal" >Total Amount: {{ sum }}</v-card>
         </template>
     </v-simple-table>
 </template>
+
 
 <script>
 import router from '@/router'
@@ -29,6 +33,10 @@ import router from '@/router'
 export default {
     data: () => ({
         data: [],
+        sum: 0,
+        
+    
+        
 
     }),
     async created(){
@@ -50,9 +58,17 @@ export default {
             .then((response) => response.json())
             .then((data) => {
                 this.data = data
-
+                for (var x in data) {
+                    this.sum +=data[x].totalAmount   
+                }
             });
-        },    
+        },
+        
+        async toDetail(POID) {
+            router.push(`/purchaseOrder/${POID}`)
+        },
+
+
     },
     
 }
