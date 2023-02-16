@@ -125,7 +125,7 @@ api.get('/shop', async (req, res) => {              //products listing
   });
 
   api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
-    const q = `SELECT status, POID, fName, totalAmount, purchaseDate FROM Purchase_Order po, User u WHERE po.userID = u.userID AND cancelBy IS NULL ORDER BY POID DESC`
+    const q = `SELECT status, POID, fName, totalAmount, purchaseDate FROM Purchase_Order po, User u WHERE po.userID = u.userID AND cancelBy IS NULL ORDER BY purchaseDate DESC`
     try {
       const result = await db.all(q);
       res.json(result);
