@@ -113,6 +113,20 @@ api.post('/cpw/:userID', async (req, res) => {              //change pw
   }
 });
 
+api.get('/tracking/:userID', async (req, res) => {              //Purchase tracking
+  if (req.params.userID == undefined) {return res.sendStatus(400); }
+
+  let userID = parseInt(req.params.userID)
+
+  const q = `SELECT * FROM Purchase_Order WHERE userID = $userID ORDER BY purchaseDate DESC`;
+  try {
+    const result = await db.all(q, userID);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 api.get('/shop', async (req, res) => {              //products listing
     const q = "SELECT * FROM Product";
     

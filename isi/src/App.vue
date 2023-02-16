@@ -69,6 +69,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import router from '@/router'
 
   export default {
     //
@@ -79,6 +80,9 @@ import { mapGetters } from 'vuex';
     computed: {
       ...mapGetters(["userID"]),
       ...mapGetters(["fName"])
+    },
+    methods: {
+      
     },
   }
 </script>

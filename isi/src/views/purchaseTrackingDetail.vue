@@ -1,12 +1,12 @@
 <template>
-    <p>PODetail {{ this.POIID }}</p>
+    <p>PODetail {{ this.POID }}</p>
 </template>
     
 <script>
 import router from '@/router'
 
 export default {
-    props: ['POIID'],
+    props: ['POID', 'userID'],
     data: () => ({
 
     }),
@@ -21,20 +21,12 @@ export default {
                 router.push("/purchaseOrder")
             } else if (this.$store.getters.userType == '2') { 
                 router.push("/login");
-            } 
-
-            // fetch data to get the userID of the order to check which user is opening this page
-            const url = `` //here need the api url
-            fetch(url)
-            .then((response) => response.json())
-            .then((data) => {
-                if (this.$store.getters.userID != data.userID) {
-                    router.push("/purchaseTracking")
-                }
-            })
+            } else if (this.userID != this.$store.getters.userID) {
+                router.push("/purchaseTracking")
+            }
         },
         loadData:async function() {
-
+            
         }
     },
 }
