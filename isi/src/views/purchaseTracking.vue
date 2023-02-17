@@ -19,10 +19,10 @@
             <template v-slot:default>
             <thead>
             <tr>
-            <th class="text-left">P.O. Number</th>
-            <th class="text-left">Purchase Date</th>
-            <th class="text-left">Total Order Amount</th>
-            <th class="text-left">Status</th>
+            <th class="text-left" width="25%">P.O. Number</th>
+            <th class="text-left" width="25%">Purchase Date</th>
+            <th class="text-left" width="25%">Total Order Amount</th>
+            <th class="text-left" width="25%">Status</th>
             </tr>
             </thead>
             <tbody>
