@@ -124,7 +124,19 @@ api.get('/shop', async (req, res) => {              //products listing
     }
   });
 
-  api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
+  api.get('/trolley/:userID', async (req, res) => {              //trolley personal data
+    let userID = parseInt(req.params.userID)
+    const q = `SELECT productID, quantity FROM Shopping_cart WHERE userID = $userID`;
+    try {
+      const result = await db.all(q, userID);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+
+api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     const q = `SELECT status, POID, fName, totalAmount, purchaseDate FROM Purchase_Order po, User u WHERE po.userID = u.userID AND cancelBy IS NULL ORDER BY purchaseDate DESC`
     try {
       const result = await db.all(q);
