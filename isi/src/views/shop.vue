@@ -62,71 +62,8 @@ Price
 
 <v-divider></v-divider>
 <v-row>
-<v-card v-for="item in items[this.page-1]" max-width="400" class="mx-16 my-15" v-if="filter_brand=='All'">
-<v-img
-      height="250"
-      width="450"
-      :src= item.image
-          ></v-img>
-    <v-card-title>{{ item.name }}</v-card-title>
 
-    <v-card-text>
-      <v-row
-        align="center"
-        class="mx-0"
-      ><v-col>
-        <div class="grey--text">
-          ♦Brand : {{ item.brand }}
-        </div></v-col>    </v-row>    </v-card-text>
-        <v-card-title>
-              <div class="mt-5" style="font-size: x-large; color: darkseagreen;">
-        ${{item.price}}
-      </div></v-card-title>
-  
-
-
-    <v-divider></v-divider>
-
-    <v-card-title>
-    <p v-if="!item.outOfStock">Product Avaliable</p>
-    <p v-else>Out Of Stock</p>
-    </v-card-title>
-
-    <v-card-text>
-      <v-row>
-          <v-col
-            cols="6"
-            sm="3"
-          >Favourite
-            <v-btn
-              icon
-              color="pink"
-              class="ml-3"
-              @click="favourite(items.productID)"
-            >
-              <v-icon>mdi-heart</v-icon>
-            </v-btn>
-          </v-col>
-          <v-col
-          cols="6"
-            sm="3">
-
-          </v-col>
-   <v-btn
-  color="secondary"
-  elevation="3"
-  outlined
-  rounded
-  x-large
-  @click="detailRoute()"
->Detail</v-btn>
-          </v-row>
-
-    </v-card-text>
-    
-</v-card>
-
-<v-card v-for="item in search[this.page-1]" max-width="400" class="mx-16 my-15" v-if="filter_band!='All'">
+<v-card v-for="item in search[this.page-1]" max-width="400" class="mx-16 my-15">
 <v-img
       height="250"
       width="450"
@@ -231,12 +168,17 @@ export default{
           this.brand.push(data[x].brand)
         }
         }
-        })
+        this.changeOrder()
+        this.search=this.items
+      })
   },
   methods:{
     detailRoute(){
     },
     change(){
+      this.page=1
+      if(this.filter_brand=="All"){this.search=this.items;
+        this.length_of_item=this.items.length}else{
       this.search=[[]]
       let count=0 //This for array x
       let countY=0 // This for counting x
@@ -252,9 +194,50 @@ export default{
         if(this.filter_brand == "All"){
         this.length_of_item=this.items.length}
         else{this.length_of_item=Math.ceil(this.search.length/6)}
-    },
+    }},
     changeOrder(){
-      
+      let i1=0,i2=0,money=0,count=0,countT=0
+      let tempStack=[[]]
+      if(this.order=="Sec"){
+        console.log(this.total_data)
+        for(let z=0;z<=this.total_data;z++){
+        for(let x=0;x<this.items.length;x++){
+          for(let y=0;y<this.items[x].length;y++){
+            if(this.items[x][y].price>money){
+              i1=x;
+              i2=y;
+            }
+          }
+        }
+        if(count>=6){count=0;countT+=1;tempStack[countT]=[]}
+        else{        
+        tempStack[countT].push(this.items[i1][i2])
+        count+=1
+        this.items[i1][i2]=""
+        i1=0;i2=0;money=0
+        }
+      }this.items=tempStack
+      }
+      else{
+        console.log(this.total_data)
+        for(let z=0;z<=this.total_data;z++){
+        for(let x=0;x<this.items.length;x++){
+          for(let y=0;y<this.items[x].length;y++){
+            if(this.items[x][y].price>money){
+              i1=x;
+              i2=y;
+            }
+          }
+        }
+        if(count>=6){count=0;countT+=1;tempStack[countT]=[]}
+        else{        
+        tempStack[countT].push(this.items[i1][i2])
+        count+=1
+        this.items[i1][i2]=""
+        i1=0;i2=0;money=0
+        }
+      }this.items=tempStack
+      }
     }
   }
   }
