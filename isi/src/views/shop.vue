@@ -23,61 +23,37 @@ Brand:
   filled
   persistent-hint
   :items="brand"
-  label="Filter here"
   v-model=filter_brand
   @change=change()
 >
 
 </v-overflow-btn>
 </v-col>
+
 </v-row>
 </v-card>
 </v-col>
 <v-col>
-  <v-card height="140px" width="500px">
+<v-card height="140px" width="400px">
 <v-card-title>
-Price Filter
+Price Order
 </v-card-title>
 <v-row>
 <v-col lg="3">
 <v-card-text>
-Price:
+Price
 </v-card-text>
 </v-col>
 <v-col lg="8">
-  <v-row>
-        <v-col class="px-4">
-          <v-range-slider
-            v-model="range"
-            hide-details
-            :max=static_highest
-            class="align-center"
-          >
-            <template v-slot:prepend>
-              <v-text-field
-                :value="range[0]"
-                class="mt-0 pt-0"
-                hide-details
-                single-line
-                type="number"
-                style="width: 60px"
-                @change="$set(range, 0, $event)"
-              ></v-text-field>
-            </template>
-            <template v-slot:append>
-              <v-text-field
-                :value="range[1]"
-                class="mt-0 pt-0"
-                hide-details
-                single-line
-                type="number"
-                style="width: 60px"
-                @change="$set(range, 1, $event)"
-              ></v-text-field>
-            </template>
-          </v-range-slider>
-        </v-col>
-      </v-row>
+  <v-overflow-btn
+  filled
+  persistent-hint
+  :items="['Sec','Desc']"
+  v-model=order
+  @change=changeOrder()
+>
+
+</v-overflow-btn>
 </v-col>
 </v-row>
 </v-card>
@@ -86,7 +62,7 @@ Price:
 
 <v-divider></v-divider>
 <v-row>
-<v-card v-for="item in items" max-width="400" class="mx-16 my-15" v-if="filter_brand=='' && item.price>= range[0] && item.price <=range[1]">
+<v-card v-for="item in items[this.page-1]" max-width="400" class="mx-16 my-15" v-if="filter_brand=='All'">
 <v-img
       height="250"
       width="450"
@@ -150,7 +126,7 @@ Price:
     
 </v-card>
 
-<v-card v-for="item in search" max-width="400" class="mx-16 my-15" :key="item.brand" v-if="item.price>= range[0] && item.price <= range[1]">
+<v-card v-for="item in search[this.page-1]" max-width="400" class="mx-16 my-15" v-if="filter_band!='All'">
 <v-img
       height="250"
       width="450"
@@ -215,6 +191,11 @@ Price:
 </v-card>
 
 </v-row>
+<v-pagination
+      v-model="page"
+      :length=length_of_item
+      circle
+    ></v-pagination>
 </v-container>
 </template>
 
@@ -223,49 +204,56 @@ const api = "http://localhost:8000/shop"
 export default{
   data(){
     return{
-      search:[
-
-      ],
-      items:[
-  ],
-  filter_brand:"",
-  Highest_Price:100,
-  static_highest:0,
-  range:[0,this.static_highest],
-      brand:[""]
+      search:[[]],
+      page:1,
+      total_data:0,
+      length_of_item:0,
+      items:[[]],
+      order:"Sec",
+  filter_brand:"All",
+      brand:["All"],
     }
   },
   mounted:function(){
     fetch(api).then((res)=>res.json()).then((data)=> {
-      this.items = data
+      this.total_data=(Math.ceil(data.length))
+      this.length_of_item=(Math.ceil(data.length/6))
+      let count = 0
+      for(let x =0;x<=data.length-1;x+=1){
+        if(x%6==0 && x!=0){
+          count++
+          this.items[count] =[]
+        }
+        this.items[count].push(data[x])
+      }
       for(let x in data){
         if(this.brand.indexOf(data[x].brand)){
           this.brand.push(data[x].brand)
         }
-        }        
-        for(let x in this.items){
-        if(this.items[x].price > this.Highest_Price){
-          this.Highest_Price = this.items[x].price
         }
-        this.static_highest = this.Highest_Price
-        this.range=[0,this.static_highest]
-    }})
+        })
   },
   methods:{
     detailRoute(){
     },
     change(){
-      this.search= []
-      for(let x in this.items){
-        if(this.filter_brand == this.items[x].brand && this.items[x].price >= this.range[0] && this.items[x].price <= this.range[1]){
-          this.search.push(this.items[x])        
+      this.search=[[]]
+      let count=0 //This for array x
+      let countY=0 // This for counting x
+        for(let x=0;x<this.items.length;x++){
+          for(let y=0;y<this.items[x].length;y++){
+            if(this.items[x][y].brand==this.filter_brand){
+              if(countY>=6){count+=1}
+              this.search[count].push(this.items[x][y])
+              countY+=1
+            }
+          }
         }
-      }
-      for(let x in this.search){
-        if(this.search[x].price > this.Highest_Price){
-          this.Highest_Price = this.search[x].price
-        }
-      }
+        if(this.filter_brand == "All"){
+        this.length_of_item=this.items.length}
+        else{this.length_of_item=Math.ceil(this.search.length/6)}
+    },
+    changeOrder(){
       
     }
   }
