@@ -54,25 +54,27 @@
         },
         methods: {
             checkUser:async function() {
-                if (this.$store.getters.userID != '') { 
+                if (this.$store.getters.userType != '2') { 
                     router.push("/personal");
                 } 
             },
             login () {
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
-                    const url = 'http://localhost:8000/user/'
-                    fetch(url)
+                    const url = 'http://localhost:8000/checkPw/'
+                    fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: this.email, password: this.password })
+                    })
                     .then((response) => response.json())
                     .then((data) => {
-                        for (let x in data) {
-                            if (data[x].email == this.email && data[x].password == this.password) {
-                                sessionStorage.setItem("user", JSON.stringify({ userID: data[x].userID, fName: data[x].fName }))
-                                this.$store.commit('login')
-                                break
-                            }
+                        if (data == '') { 
+                            this.fail = true; 
+                            return;
                         }
-                        this.fail = true
+                        sessionStorage.setItem("user", JSON.stringify({ userID: data.userID, fName: data.fName }))
+                        this.$store.commit('login')
                     })
                 }
             },

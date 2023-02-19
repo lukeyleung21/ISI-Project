@@ -46,7 +46,7 @@ const routes = [
     component: ()=> import('../views/purchaseOrder.vue')
   },
   {
-    path:'/purchaseOrder/:POIID',
+    path:'/purchaseOrder/:POID',
     name:'purchaseOrderDetail',
     props: true,
     component: ()=> import('../views/purchaseOrderDetail.vue')

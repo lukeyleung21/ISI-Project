@@ -12,9 +12,9 @@ export default {
     },
     methods: {
         checkUser:async function() {
-            if (this.$store.getters.userID == '0') { 
+            if (this.$store.getters.userType == '0') { 
                 router.push("/");
-            } else if (this.$store.getters.userID == '') {
+            } else if (this.$store.getters.userType == '2') {
                 router.push("/login")
             }
         },
