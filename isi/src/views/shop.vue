@@ -7,7 +7,7 @@
 </v-row>
 <v-divider></v-divider>
 <v-row>
-<v-col lg="5">
+<v-col lg="5" class="mt-2">
 <v-card height="140px" width="500px">
 <v-card-title>
 Brand Filter
@@ -33,7 +33,7 @@ Brand:
 </v-row>
 </v-card>
 </v-col>
-<v-col>
+<v-col class="mt-2">
 <v-card height="140px" width="400px">
 <v-card-title>
 Price Order
@@ -46,6 +46,7 @@ Price
 </v-col>
 <v-col lg="8">
   <v-overflow-btn
+  class="mt-1"
   filled
   persistent-hint
   :items="['Sec','Desc']"
@@ -59,7 +60,8 @@ Price
 </v-card>
 </v-col>
 </v-row>
-
+<div class="mt-2">
+</div>
 <v-divider></v-divider>
 <v-row>
 
@@ -69,61 +71,39 @@ Price
       width="450"
       :src= item.image
           ></v-img>
-    <v-card-title>{{ item.name }}</v-card-title>
-
-    <v-card-text>
-      <v-row
-        align="center"
-        class="mx-0"
-      ><v-col>
+    <v-row>
+      <v-col lg="8"><v-card-title>{{ item.name }}</v-card-title>
+      <v-card-text>
+      <v-col>
         <div class="grey--text">
           ♦Brand : {{ item.brand }}
-        </div></v-col>    </v-row>    </v-card-text>
-        <v-card-title>
-              <div class="mt-5" style="font-size: x-large; color: darkseagreen;">
+        </div></v-col></v-card-text></v-col>
+      <v-col lg="4">
+      <div class="mt-10" style="font-size: x-large; color: darkseagreen;">
         ${{item.price}}
-      </div></v-card-title>
+      </div>
+    </v-col>
+</v-row>
+
   
 
 
     <v-divider></v-divider>
-
-    <v-card-title>
-    <p v-if="!item.outOfStock">Product Avaliable</p>
-    <p v-else>Out Of Stock</p>
-    </v-card-title>
-
-    <v-card-text>
-      <v-row>
-          <v-col
-            cols="6"
-            sm="3"
-          >Favourite
-            <v-btn
-              icon
-              color="pink"
-              class="ml-3"
-              @click="favourite(items.productID)"
-            >
-              <v-icon>mdi-heart</v-icon>
-            </v-btn>
-          </v-col>
-          <v-col
-          cols="6"
-            sm="3">
-
-          </v-col>
-   <v-btn
+<!-- lower part -->
+    <v-card-title>  
+    <v-col lg="7">
+    <p v-if="item.outOfStock=='F'">Product Avaliable</p>
+    <p v-else>Out Of Stock</p></v-col>
+    <v-col>
+    <v-btn
   color="secondary"
   elevation="3"
   outlined
   rounded
   x-large
   @click="detailRoute()"
->Detail</v-btn>
-          </v-row>
-
-    </v-card-text>
+>Detail</v-btn></v-col>
+    </v-card-title>
     
 </v-card>
 
