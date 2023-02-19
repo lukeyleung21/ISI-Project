@@ -143,7 +143,6 @@ export default{
     return{
       search:[[]],
       page:1,
-      total_data:0, //search list Data
       length_of_item:0, //SearchitemX
       items:[],
       items_reverse:[],
@@ -155,7 +154,6 @@ export default{
   mounted:function(){
     fetch(api).then((res)=>res.json()).then((data)=> {
       data.sort(function(a,b){return a.price - b.price})
-      this.total_data=(Math.ceil(data.length))
       this.length_of_item=(Math.ceil(data.length/6))
       let count = 0,countT=0
       this.items = JSON.parse(JSON.stringify(data))
@@ -185,6 +183,7 @@ export default{
           this.search[countT].push(this.items[x])
           count+=1
       }
+      this.length_of_item=(Math.ceil(this.search.length))
         }
         else{
           let count = 0,countT=0
@@ -193,11 +192,32 @@ export default{
           this.search[countT].push(this.items_reverse[x])
           count+=1
       }
+      this.length_of_item=(Math.ceil(this.search.length))
+      console.log(this.search)
         }
       }
       else{
-    }},
-    PhraseToPage(){}
+        if(this.order=="Sec"){
+          let count = 0,countT=0
+          for(let x=0;x<this.items.length;x++){
+          if(this.items[x].brand == this.filter_brand){
+            if(count>=6){count=0;countT++;this.search[countT]=[]}
+            this.search[countT].push(this.items[x])
+            count+=1
+      }}
+      this.length_of_item=(Math.ceil(this.search.length))
+    }
+        else{
+          let count = 0,countT=0
+          for(let x=0;x<this.items_reverse.length;x++){
+          if(this.items_reverse[x].brand == this.filter_brand){
+            if(count>=6){count=0;countT++;this.search[countT]=[]}
+            this.search[countT].push(this.items_reverse[x])
+            count+=1
+      }}
+      this.length_of_item=(Math.ceil(this.search.length))
+        }
+    }}
   }
   }
 </script>
