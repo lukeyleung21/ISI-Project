@@ -50,7 +50,7 @@ Price
   persistent-hint
   :items="['Sec','Desc']"
   v-model=order
-  @change=changeOrder()
+  @change=change()
 >
 
 </v-overflow-btn>
@@ -143,9 +143,10 @@ export default{
     return{
       search:[[]],
       page:1,
-      total_data:0,
-      length_of_item:0,
-      items:[[]],
+      total_data:0, //search list Data
+      length_of_item:0, //SearchitemX
+      items:[],
+      items_reverse:[],
       order:"Sec",
   filter_brand:"All",
       brand:["All"],
@@ -153,23 +154,21 @@ export default{
   },
   mounted:function(){
     fetch(api).then((res)=>res.json()).then((data)=> {
+      data.sort(function(a,b){return a.price - b.price})
       this.total_data=(Math.ceil(data.length))
       this.length_of_item=(Math.ceil(data.length/6))
-      let count = 0
-      for(let x =0;x<=data.length-1;x+=1){
-        if(x%6==0 && x!=0){
-          count++
-          this.items[count] =[]
-        }
-        this.items[count].push(data[x])
+      let count = 0,countT=0
+      this.items = JSON.parse(JSON.stringify(data))
+      this.items_reverse = JSON.parse(JSON.stringify(data)).reverse()
+      for(let x=0;x<this.items.length;x++){
+        if(count>=6){count=0;countT++;this.search[countT]=[]}
+        this.search[countT].push(this.items[x])
+        count+=1
       }
       for(let x in data){
         if(this.brand.indexOf(data[x].brand)){
           this.brand.push(data[x].brand)
-        }
-        }
-        this.changeOrder()
-        this.search=this.items
+        }}
       })
   },
   methods:{
@@ -177,68 +176,28 @@ export default{
     },
     change(){
       this.page=1
-      if(this.filter_brand=="All"){this.search=this.items;
-        this.length_of_item=this.items.length}else{
       this.search=[[]]
-      let count=0 //This for array x
-      let countY=0 // This for counting x
-        for(let x=0;x<this.items.length;x++){
-          for(let y=0;y<this.items[x].length;y++){
-            if(this.items[x][y].brand==this.filter_brand){
-              if(countY>=6){count+=1}
-              this.search[count].push(this.items[x][y])
-              countY+=1
-            }
-          }
+      if(this.filter_brand=="All"){
+        if(this.order=="Sec"){
+          let count = 0,countT=0
+          for(let x=0;x<this.items.length;x++){
+          if(count>=6){count=0;countT++;this.search[countT]=[]}
+          this.search[countT].push(this.items[x])
+          count+=1
+      }
         }
-        if(this.filter_brand == "All"){
-        this.length_of_item=this.items.length}
-        else{this.length_of_item=Math.ceil(this.search.length/6)}
-    }},
-    changeOrder(){
-      let i1=0,i2=0,money=0,count=0,countT=0
-      let tempStack=[[]]
-      if(this.order=="Sec"){
-        console.log(this.total_data)
-        for(let z=0;z<=this.total_data;z++){
-        for(let x=0;x<this.items.length;x++){
-          for(let y=0;y<this.items[x].length;y++){
-            if(this.items[x][y].price>money){
-              i1=x;
-              i2=y;
-            }
-          }
+        else{
+          let count = 0,countT=0
+          for(let x=0;x<this.items_reverse.length;x++){
+          if(count>=6){count=0;countT++;this.search[countT]=[]}
+          this.search[countT].push(this.items_reverse[x])
+          count+=1
+      }
         }
-        if(count>=6){count=0;countT+=1;tempStack[countT]=[]}
-        else{        
-        tempStack[countT].push(this.items[i1][i2])
-        count+=1
-        this.items[i1][i2]=""
-        i1=0;i2=0;money=0
-        }
-      }this.items=tempStack
       }
       else{
-        console.log(this.total_data)
-        for(let z=0;z<=this.total_data;z++){
-        for(let x=0;x<this.items.length;x++){
-          for(let y=0;y<this.items[x].length;y++){
-            if(this.items[x][y].price>money){
-              i1=x;
-              i2=y;
-            }
-          }
-        }
-        if(count>=6){count=0;countT+=1;tempStack[countT]=[]}
-        else{        
-        tempStack[countT].push(this.items[i1][i2])
-        count+=1
-        this.items[i1][i2]=""
-        i1=0;i2=0;money=0
-        }
-      }this.items=tempStack
-      }
-    }
+    }},
+    PhraseToPage(){}
   }
   }
 </script>
