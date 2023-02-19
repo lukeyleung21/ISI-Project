@@ -100,8 +100,8 @@ Price
   elevation="3"
   outlined
   rounded
+  @click=toDetail(item.productID)
   x-large
-  @click="detailRoute()"
 >Detail</v-btn></v-col>
     </v-card-title>
     
@@ -117,6 +117,8 @@ Price
 </template>
 
 <script>
+import router from '@/router'
+
 const api = "http://localhost:8000/shop"
 export default{
   data(){
@@ -150,7 +152,8 @@ export default{
       })
   },
   methods:{
-    detailRoute(){
+    toDetail(x){
+      router.push(`/product/${x}`)
     },
     change(){
       this.page=1
