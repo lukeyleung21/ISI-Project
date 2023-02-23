@@ -127,6 +127,56 @@ api.get('/tracking/:userID', async (req, res) => {              //Purchase track
   }
 });
 
+api.get('/trackingDetailUser/:POID', async (req, res) => {              //Purchase tracking user detail
+  if (req.params.POID == undefined) {return res.sendStatus(400); }
+
+  let POID = parseInt(req.params.POID)
+
+  const q = `SELECT po.userID, po.POID, po.purchaseDate, u.FName, u.address, po.totalAmount, po.status, po.statusDate, po.cancelBy FROM Purchase_Order po, User u WHERE po.POID = $POID AND po.userID = u.userID`;
+  try {
+    const result = await db.all(q, POID);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
+api.get('/trackingDetail/:POID', async (req, res) => {              //Purchase tracking product detail
+  if (req.params.POID == undefined) {return res.sendStatus(400); }
+
+  let POID = parseInt(req.params.POID)
+
+  const q = `SELECT * FROM Purchase_Order_Item poi, Product p WHERE poi.POID = $POID AND poi.productID = p.productID`;
+  try {
+    const result = await db.all(q, POID);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+api.get('/cancel/:POID', async (req, res) => {              //Purchase tracking status change to cancel
+  if (req.params.POID == undefined) {return res.sendStatus(400); }
+
+  let POID = parseInt(req.params.POID)
+  const dateObj = new Date();
+  let year = dateObj.getFullYear();
+  let month = dateObj.getMonth();
+  month = ('0' + (month + 1)).slice(-2);
+  let date = dateObj.getDate();
+  date = ('0' + date).slice(-2);
+  const today = `${year}-${month}-${date}`;
+
+  const q = `UPDATE Purchase_Order SET status = 'cancelled', statusDate = $today, cancelBy = 'customer' WHERE POID = $POID`;
+  try {
+    var result = db.run(q, today, POID);
+    res.status(200).json();
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 api.get('/shop', async (req, res) => {              //products listing
     const q = "SELECT * FROM Product";
     

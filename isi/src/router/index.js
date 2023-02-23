@@ -57,7 +57,7 @@ const routes = [
     component: ()=> import('../views/purchaseTracking.vue')
   },
   {
-    path:'/purchaseTrackingDetail/:userID/:POID',
+    path:'/purchaseTrackingDetail/:POID',
     name:'purchaseTrackingDetail',
     props: true,
     component: ()=> import('../views/purchaseTrackingDetail.vue')

@@ -36,7 +36,7 @@
             </template>
     </v-simple-table>
     
-    </template>
+</template>
 
 <script>
 import router from '@/router'
@@ -77,7 +77,7 @@ export default {
             })
         },
         async toDetail(POID) {
-            router.push(`/purchaseTrackingDetail/${this.$store.getters.userID}/${POID}`)
+            router.push(`/purchaseTrackingDetail/${POID}`)
         },
         changeToAll() {
             this.type = 0
