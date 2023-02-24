@@ -49,7 +49,7 @@ Price
   class="mt-1"
   filled
   persistent-hint
-  :items="['Sec','Desc']"
+  :items="['ASEC','Desc']"
   v-model=order
   @change=change()
 >
@@ -128,7 +128,7 @@ export default{
       length_of_item:0, //SearchitemX
       items:[],
       items_reverse:[],
-      order:"Sec",
+      order:"ASEC",
   filter_brand:"All",
       brand:["All"],
     }
@@ -159,7 +159,7 @@ export default{
       this.page=1
       this.search=[[]]
       if(this.filter_brand=="All"){
-        if(this.order=="Sec"){
+        if(this.order=="ASEC"){
           let count = 0,countT=0
           for(let x=0;x<this.items.length;x++){
           if(count>=6){count=0;countT++;this.search[countT]=[]}
@@ -180,7 +180,7 @@ export default{
         }
       }
       else{
-        if(this.order=="Sec"){
+        if(this.order=="ASEC"){
           let count = 0,countT=0
           for(let x=0;x<this.items.length;x++){
           if(this.items[x].brand == this.filter_brand){
