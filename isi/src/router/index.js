@@ -57,7 +57,7 @@ const routes = [
     component: ()=> import('../views/purchaseTracking.vue')
   },
   {
-    path:'/purchaseTracking/:POIID',
+    path:'/purchaseTrackingDetail/:POID',
     name:'purchaseTrackingDetail',
     props: true,
     component: ()=> import('../views/purchaseTrackingDetail.vue')
@@ -66,6 +66,11 @@ const routes = [
     path:'/changePassword',
     name:'changePassword',
     component: ()=> import('../views/changePassword.vue')
+  },
+  {
+    path:'/test',
+    name:'test',
+    component: ()=> import('../views/test.vue')
   },
   
 ]
