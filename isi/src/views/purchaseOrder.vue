@@ -1,18 +1,25 @@
 <template>
-    <v-simple-table fixed-header height="300px">
-        <template v-slot:default>
-        <thead>
-        <tr>
-        <th class="text-left">Staus</th>
-        <th class="text-left">P.O numbers</th>
-        <th class="text-left">Name</th>
-        <th class="text-left">Amount</th>
-        <th class="text-left">Purchase Dates</th>
-        <th class="text-left">Operation</th>
-        </tr>
-        </thead>
-        <tbody>
-            <tr v-for="Data in data" :key="Data.status">
+    <v-simple-table height="300px">
+         
+         <template v-slot:default>
+          <thead>
+             <tr>
+              <v-btn outlined @click="changeToAll()">All</v-btn>&nbsp;
+              <v-btn outlined @click="changeToPending()">pending</v-btn>&nbsp;
+              <v-btn outlined @click="changeToHold()">hold</v-btn>&nbsp;
+              <v-btn outlined @click="changeToPast()">Past</v-btn>&nbsp;
+            </tr>
+          <tr>
+          <th class="text-left">Staus</th>
+          <th class="text-left">P.O numbers</th>
+          <th class="text-left">Name</th>
+          <th class="text-left">Amount</th>
+          <th class="text-left">Purchase Dates</th>
+          <th class="text-left">Operation</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr v-for="Data in data" :key="Data.POID">
             <td>{{ Data.status }}</td>
             <td>{{ Data.POID }}</td>
             <td>{{ Data.fName }}</td>
@@ -20,10 +27,10 @@
             <td>{{ Data.purchaseDate }}</td>
             <v-btn color="primary" @click="toDetail(Data.POID)">Detail</v-btn>
             </tr>
-        </tbody>
-        <v-card variant="tonal" >Total Amount: {{ sum }}</v-card>
-        </template>
+          </tbody>
+         </template>
     </v-simple-table>
+
 </template>
 
 
@@ -33,11 +40,11 @@ import router from '@/router'
 export default {
     data: () => ({
         data: [],
-        sum: 0,
+        alldata:[],
+        pending:[],
+        hold:[],
+        ship_cancel:[],
         
-    
-        
-
     }),
     async created(){
         await this.checkUser();
@@ -58,8 +65,22 @@ export default {
             .then((response) => response.json())
             .then((data) => {
                 this.data = data
+                this.alldata = data
                 for (var x in data) {
-                    this.sum +=data[x].totalAmount   
+                    if (data[x].status == 'pending') {
+                        this.pending.push(data[x])
+                    } 
+                }
+                for (var x in data) {
+                    if (data[x].status == 'hold') {
+                        this.hold.push(data[x])
+                    }
+                }
+                for (var x in data) {
+                    if (data[x].status == 'shipped' || data[x].status == 'cancelled') {
+                        this.ship_cancel.push(data[x])
+                    }
+                     
                 }
             });
         },
@@ -67,6 +88,20 @@ export default {
         async toDetail(POID) {
             router.push(`/purchaseOrder/${POID}`)
         },
+        changeToAll() {
+            this.data = this.alldata
+        },
+        changeToPending() {
+            this.data=this.pending
+        },
+        changeToHold() {
+            this.data=this.hold
+        },
+        changeToPast() {
+            this.data=this.ship_cancel
+        },
+       
+        
 
 
     },
