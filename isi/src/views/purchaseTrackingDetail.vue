@@ -1,43 +1,58 @@
 <template>
-    <v-simple-table height="300px">
-        <template v-slot:top>      
-        <v-toolbar v-if="data.status == 'cancelled'" v-slot:extension extension-height="180" flat><v-toolbar-title>
-            <div>
-                P.O. number: {{ data.POID }}<br>
-                Purchase date: {{ data.purchaseDate }}<br>
-                Customer name: {{ data.fName }}<br>
-                Address: {{ data.address }}<br>
-                Total amount: {{ data.totalAmount }}<br>    
-                purchase order status: {{ data.status }}<br>
-                Cancel data: {{ data.statusDate }}<br>
-                Cancel by: {{ data.cancelBy }}<br><br><br>
-            </div>
-        </v-toolbar-title></v-toolbar>
+    <v-card class="mx-auto" max-width="auto" variant="outlined">
+      <v-card-item>
+        <div>
+          <div class="text-h6 mb-1" v-if="data.status == 'cancelled'">
+            P.O. number: {{ data.POID }}<br>
+            Purchase date: {{ data.purchaseDate }}<br>
+            Customer name: {{ data.fName }}<br>
+            Address: {{ data.address }}<br>
+            Total amount: {{ data.totalAmount }}<br>    
+            Purchase order status: {{ data.status }}<br>
+            Cancel data: {{ data.statusDate }}<br>
+            Cancel by: {{ data.cancelBy }}
+          </div>
 
-        <v-toolbar v-else v-slot:extension extension-height="120" flat><v-toolbar-title>
-            <div>
-                P.O. number: {{ data.POID }}<br>
-                Purchase date: {{ data.purchaseDate }}<br>
-                Customer name: {{ data.fName }}<br>
-                Address: {{ data.address }}<br>
-                Total amount: {{ data.totalAmount }}<br>    
-                purchase order status: {{ data.status }} <v-btn v-if="data.status != 'shipped'" color="error" @click="cancel">Cancel</v-btn>
-                <br><br><br>
-            </div>
-        </v-toolbar-title></v-toolbar></template>
+          <div class="text-h6 mb-1" v-else-if="data.status == 'shipped'">
+            P.O. number: {{ data.POID }}<br>
+            Purchase date: {{ data.purchaseDate }}<br>
+            Customer name: {{ data.fName }}<br>
+            Address: {{ data.address }}<br>
+            Total amount: {{ data.totalAmount }}<br>    
+            Purchase order status: {{ data.status }}<br>
+            Shipment data: {{ data.statusDate }}<br>
+          </div>
 
-        <template v-slot:default><thead><tr>
-        <th class="text-left">Product name</th>
-        <th class="text-left">Quantity</th>
-        <th class="text-left">Price</th>
-        <th class="text-left">Subtotal</th>
-        </tr></thead><tbody><tr v-for="product in productDetail" :key="product.name">
+          <div class="text-h6 mb-1" v-else>
+            P.O. number: {{ data.POID }}<br>
+            Purchase date: {{ data.purchaseDate }}<br>
+            Customer name: {{ data.fName }}<br>
+            Address: {{ data.address }}<br>
+            Total amount: {{ data.totalAmount }}<br>    
+            Purchase order status: {{ data.status }}<br>
+            <v-btn v-if="data.status != 'shipped'" color="error" @click="cancel">Cancel the Order</v-btn>
+          </div>
+
+        </div>
+      </v-card-item>
+
+      <v-card-text>
+        <v-simple-table height="auto"><template v-slot:default><thead>
+        <tr>
+            <th class="text-left">Product name</th>
+            <th class="text-left">Quantity</th>
+            <th class="text-left">Price</th>
+            <th class="text-left">Subtotal</th>
+        </tr></thead><tbody>
+        <tr v-for="product in productDetail" :key="product.name">
             <td>{{ product.name }}</td>
             <td>{{ product.quantity }}</td>
             <td>{{ product.price }}</td>
             <td>{{ product.amount }}</td>
         </tr></tbody></template>
-    </v-simple-table> 
+        </v-simple-table> 
+      </v-card-text>
+    </v-card>
 </template>
 
     
