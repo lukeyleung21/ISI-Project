@@ -66,11 +66,7 @@ Price
 <v-row>
 
 <v-card v-for="item in search[this.page-1]" max-width="400" class="mx-16 my-15">
-<v-img
-      height="250"
-      width="450"
-      :src= item.image
-          ></v-img>
+<v-img :src= item.image></v-img>
     <v-row>
       <v-col lg="8"><v-card-title>{{ item.name }}</v-card-title>
       <v-card-text>
