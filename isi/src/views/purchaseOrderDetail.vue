@@ -23,6 +23,16 @@
             Shipment data: {{ data.statusDate }}<br>
           </div>
 
+          <div class="text-h6 mb-1" v-else-if="data.status == 'hold'">
+            P.O. number: {{ data.POID }}<br>
+            Purchase date: {{ data.purchaseDate }}<br>
+            Customer name: {{ data.fName }}<br>
+            Address: {{ data.address }}<br>
+            Total amount: {{ data.totalAmount }}<br>    
+            Purchase order status: {{ data.status }}<br>
+            Shipment data: {{ data.statusDate }}<br>
+          </div>
+
           <div class="text-h6 mb-1" v-else>
             P.O. number: {{ data.POID }}<br>
             Purchase date: {{ data.purchaseDate }}<br>
