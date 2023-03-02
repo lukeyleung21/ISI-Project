@@ -1,5 +1,5 @@
 <template>
-    <v-simple-table height="300px">
+    <v-simple-table height="auto">
             <template v-slot:top v-if="this.type == 0"><v-toolbar flat><v-toolbar-title>
                 <v-btn color="primary" @click="changeToAll()">All</v-btn>&nbsp;
                 <v-btn outlined @click="changeToCurrent()">Current</v-btn>&nbsp;
@@ -19,7 +19,8 @@
             <template v-slot:default>
             <thead>
             <tr>
-            <th class="text-left" width="25%">P.O. Number</th>
+            <th class="text-left" width="5%">P.O. Number</th>
+            <th class="text-left" width="10%"></th>
             <th class="text-left" width="25%">Purchase Date</th>
             <th class="text-left" width="25%">Total Order Amount</th>
             <th class="text-left" width="25%">Status</th>
@@ -27,7 +28,8 @@
             </thead>
             <tbody>
             <tr v-for="order in order" :key="order.POID">
-            <td>{{ order.POID }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<v-btn color="primary" @click="toDetail(order.POID)">Detail</v-btn></td>
+            <td>{{ order.POID }}</td>
+            <td><v-btn color="primary" @click="toDetail(order.POID)">Detail</v-btn></td>
             <td>{{ order.purchaseDate }}</td>
             <td>{{ order.totalAmount }}</td>
             <td>{{ order.status }}</td>
