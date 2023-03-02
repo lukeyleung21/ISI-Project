@@ -189,13 +189,41 @@ api.get('/shop', async (req, res) => {              //products listing
   });
 
   api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
-    const q = `SELECT status, POID, fName, totalAmount, purchaseDate FROM Purchase_Order po, User u WHERE po.userID = u.userID AND cancelBy IS NULL ORDER BY purchaseDate DESC`
+    const q = `SELECT status, POID, fName, totalAmount, purchaseDate FROM Purchase_Order po, User u WHERE po.userID = u.userID ORDER BY purchaseDate DESC`
     try {
       const result = await db.all(q);
       res.json(result);
     } catch (err) {
       res.status(500).json(err);
     }
-  })
+  });
 
+  api.get('/purchaseOrderDetail/:POID', async(req, res) => {
+    let POID = parseInt(req.params.POID)
+    const q = "SELECT po.userID, po.POID, po.purchaseDate, u.FName, u.address, po.totalAmount, po.status, po.statusDate, po.cancelBy FROM Purchase_Order po, User u WHERE po.POID = $POID AND po.userID = u.userID";
+    try {
+      const result = await db.all(q);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+  api.get('/ship/:POID', async (req, res) => {
+    let POID = parseInt(req.params.POID)
+    const dateObj = new Date();
+    let year = dateObj.getFullYear();
+    let month = dateObj.getMonth();
+    month = ('0' + (month + 1)).slice(-2);
+    let date = dateObj.getDate();
+    date = ('0' + date).slice(-2);
+    const today = `${year}-${month}-${date}`;
+    const q = `UPDATE Purchase_Order SET status = 'shipped', statusDate = $today WHERE POID = $POID`;
+    try {
+      const result = await db.all(q, today, POID);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
 export default api;
