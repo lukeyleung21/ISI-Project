@@ -41,11 +41,26 @@
             Total amount: {{ data.totalAmount }}<br>    
             Purchase order status: {{ data.status }} <v-btn color="primary" @click="ship">ship</v-btn>
           </div>
-
         </div>
       </v-card-item>
 
-      
+      <v-card-text>
+        <v-simple-table height="auto"><template v-slot:default><thead>
+        <tr>
+            <th class="text-left">Product name</th>
+            <th class="text-left">Quantity</th>
+            <th class="text-left">Price</th>
+            <th class="text-left">Subtotal</th>
+        </tr></thead><tbody>
+        <tr v-for="product in productDetail" :key="product.name">
+            <td>{{ product.name }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.amount }}</td>
+        </tr></tbody></template>
+        </v-simple-table> 
+      </v-card-text>
+  
     </v-card>
 
 
@@ -77,7 +92,7 @@ export default {
 
         },
         loadData:async function() {
-            fetch('http://localhost:8000/purchaseOrderDetail/' + this.POID)
+            fetch('http://localhost:8000/trackingDetail/' + this.POID)
             .then(response => response.json())
             .then(data => {
                 this.productDetail = data
