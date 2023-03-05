@@ -188,6 +188,19 @@ api.get('/shop', async (req, res) => {              //products listing
     }
   });
 
+  api.get('/product/:productID', async (req, res) => {              //ProductID
+    if (req.params.productID == undefined) {return res.sendStatus(400); }
+    
+    let productID = parseInt(req.params.productID)
+    const q = `SELECT * FROM Product WHERE productID = $productID`;
+    try{
+      var result = await db.all(q,productID);
+      res.json(result)
+    }catch(err)
+    {res.status(500).json(err)}
+
+  });
+
   api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     const q = `SELECT status, POID, fName, totalAmount, purchaseDate FROM Purchase_Order po, User u WHERE po.userID = u.userID ORDER BY purchaseDate DESC`
     try {
