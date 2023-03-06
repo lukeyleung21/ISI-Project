@@ -23,23 +23,22 @@
             Shipment data: {{ data.statusDate }}<br>
           </div>
 
+          <div class="text-h6 mb-1" v-else-if="data.status == 'pending'">
+            P.O. number: {{ data.POID }}<br>
+            Purchase date: {{ data.purchaseDate }}<br>
+            Customer name: {{ data.fName }}<br>
+            Address: {{ data.address }}<br>
+            Total amount: {{ data.totalAmount }}<br>    
+            Purchase order status: {{ data.status }} <v-btn color="primary" @click="hold">Hold</v-btn> <v-btn color="error" @click="vcancel">Cancel</v-btn>
+          </div>
+
           <div class="text-h6 mb-1" v-else-if="data.status == 'hold'">
             P.O. number: {{ data.POID }}<br>
             Purchase date: {{ data.purchaseDate }}<br>
             Customer name: {{ data.fName }}<br>
             Address: {{ data.address }}<br>
             Total amount: {{ data.totalAmount }}<br>    
-            Purchase order status: {{ data.status }}<br>
-            Shipment data: {{ data.statusDate }}<br>
-          </div>
-
-          <div class="text-h6 mb-1" v-else>
-            P.O. number: {{ data.POID }}<br>
-            Purchase date: {{ data.purchaseDate }}<br>
-            Customer name: {{ data.fName }}<br>
-            Address: {{ data.address }}<br>
-            Total amount: {{ data.totalAmount }}<br>    
-            Purchase order status: {{ data.status }} <v-btn color="primary" @click="ship">ship</v-btn>
+            Purchase order status: {{ data.status }}<v-btn color="primary" @click="ship">ship</v-btn> <v-btn color="error" @click="vcancel">Cancel</v-btn>
           </div>
         </div>
       </v-card-item>
@@ -101,6 +100,28 @@ export default {
 
         async ship(){
             fetch('http://localhost:8000/ship/' + this.POID)
+            .then(response => {
+                if (response.status == 200) {
+                    window.location.reload()
+                } else {
+                    console.log("fail")
+                }
+            })
+        },
+
+        async hold(){
+            fetch('http://localhost:8000/hold/' + this.POID)
+            .then(response => {
+                if (response.status == 200) {
+                    window.location.reload()
+                } else {
+                    console.log("fail")
+                }
+            })
+        },
+
+        async vcancel(){
+            fetch('http://localhost:8000/vcancel/' + this.POID)
             .then(response => {
                 if (response.status == 200) {
                     window.location.reload()

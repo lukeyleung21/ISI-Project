@@ -222,7 +222,7 @@ api.get('/shop', async (req, res) => {              //products listing
     }
   });
 
-  api.get('/ship/:POID', async (req, res) => {
+  api.get('/ship/:POID', async (req, res) => {             //vendor Pending to Shipped
     let POID = parseInt(req.params.POID)
     const dateObj = new Date();
     let year = dateObj.getFullYear();
@@ -239,4 +239,41 @@ api.get('/shop', async (req, res) => {              //products listing
       res.status(500).json(err);
     }
   });
+
+  api.get('/hold/:POID', async (req, res) => {             //vendor Pending to Hold
+    let POID = parseInt(req.params.POID)
+    const dateObj = new Date();
+    let year = dateObj.getFullYear();
+    let month = dateObj.getMonth();
+    month = ('0' + (month + 1)).slice(-2);
+    let date = dateObj.getDate();
+    date = ('0' + date).slice(-2);
+    const today = `${year}-${month}-${date}`;
+    const q = `UPDATE Purchase_Order SET status = 'hold', cancelBy = NULL, statusDate = $today WHERE POID = $POID`;
+    try {
+      const result = await db.all(q, today, POID);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+  api.get('/vcancel/:POID', async (req, res) => {             //vendor cancel
+    let POID = parseInt(req.params.POID)
+    const dateObj = new Date();
+    let year = dateObj.getFullYear();
+    let month = dateObj.getMonth();
+    month = ('0' + (month + 1)).slice(-2);
+    let date = dateObj.getDate();
+    date = ('0' + date).slice(-2);
+    const today = `${year}-${month}-${date}`;
+    const q = `UPDATE Purchase_Order SET status = 'cancelled', statusDate = $today, cancelBy = 'vendor' WHERE POID = $POID`;
+    try {
+      const result = await db.all(q, today, POID);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
 export default api;
