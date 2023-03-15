@@ -1,6 +1,5 @@
 <template>
     <v-simple-table height="auto">
-         
          <template v-slot:default>
           <thead>
              <tr>
@@ -8,6 +7,7 @@
               <v-btn outlined @click="changeToPending()">pending</v-btn>&nbsp;
               <v-btn outlined @click="changeToHold()">hold</v-btn>&nbsp;
               <v-btn outlined @click="changeToPast()">Past</v-btn>&nbsp;
+              <v-text-field label="Search" id="serach" data-search @input="changeToPOid()"></v-text-field>
             </tr>
           <tr>
           <th class="text-left">Staus</th>
@@ -30,13 +30,11 @@
           </tbody>
          </template>
     </v-simple-table>
-
 </template>
 
 
 <script>
 import router from '@/router'
-
 export default {
     data: () => ({
         data: [],
@@ -44,7 +42,7 @@ export default {
         pending:[],
         hold:[],
         ship_cancel:[],
-        
+        po_order:[],
     }),
     async created(){
         await this.checkUser();
@@ -56,8 +54,10 @@ export default {
                 router.push("/purchaseTracking")
             } else if (this.$store.getters.userType == '2') { 
                 router.push("/login");
-            } 
+            }
         },
+        
+
 
          order:async function () {
             const url ='http://localhost:8000/purchaseOrder'
@@ -82,9 +82,19 @@ export default {
                     }
                      
                 }
+                    const searchInput = document.querySelector("[data-search]")
+                    searchInput.addEventListener("input", e => {
+                    const value = e.target.value
+                    this.po_order=[]
+                    for (var x in data) {
+                        if (value == data[x].POID) {
+                            this.po_order.push(data[x])
+                            this.data = this.po_order
+                        } 
+                    }
+                    });
             });
         },
-        
         async toDetail(POID) {
             router.push(`/purchaseOrder/${POID}`)
         },
@@ -100,11 +110,13 @@ export default {
         changeToPast() {
             this.data=this.ship_cancel
         },
-       
-        
-
+        changeToPOid() {
+            this.data=this.po_order
+            
+        }
 
     },
+    
     
 }
 </script>
