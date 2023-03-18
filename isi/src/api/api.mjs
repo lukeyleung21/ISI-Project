@@ -234,7 +234,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
   
     try {
       var result = db.run(q, value);
-      res.status(200).json();
+      res.status(200).json(result);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -253,7 +253,23 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
 
     try{
       var result = db.run(q,value);
-      res.status(200).json();
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+  api.post('/deleteShoppingcart/:userID', async (req,res) => {
+    if (req.params.userID == undefined) {return res.sendStatus(400); }
+
+    let value = {
+      $userID: req.params.userID
+    };
+
+    try{
+      const q ='DELETE FROM Shopping_cart WHERE userID = $userID '
+      var result = db.run(q, value);
+      res.status(200).json(result);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -276,22 +292,26 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
       $cancelBy: undefined,
     };
 
-    let value ={
-      $POID: userData.POID,
-      $productID: req.body.productID,
-      $price: req.body.price,
-      $quantity: req.body.quantity,
-      $amount: undefined
-    };
+    //let value ={
+    //  $POID: userData.POID,
+    //  $productID: req.body.productID,
+    //  $price: req.body.price,
+    //  $quantity: req.body.quantity,
+    //  $amount: undefined
+    //};
 
     try {
       const q = 'INSERT INTO Purchase_Order (userID, totalAmount, purchaseDate, status, statusDate, cancelBy) VALUES ($userID, $total_amount, $purchaseDate, $status, $statusDate, $cancelBy)';
-      const q2 = 'INSERT INTO Purchase_Order_Item (POID, productID, price, quantity, amount) VALUES ($POID, $productID, $price, $quantity, $amount)';
       const result = await db.run(q, values);
-      const results = await db.run(q2, value);
+      console.log("here");
       var userData = { POID: result.lastID, userID: req.params.userID}
+      
+      let $POID = userData.POID;
+      const q2 = 'INSERT INTO Purchase_Order_Item (POID, price, quantity, productID, amount) SELECT POID, price, quantity, sc.productID, price*quantity AS total FROM Product p, Shopping_cart sc, Purchase_Order po WHERE p.productID = sc.productID AND po.userID = sc.userID AND po.POID = $POID'
+      const results = await db.run(q2,$POID);
       var userDatas = { POIID: results.lastID}
-      res.status(200).json(userData,userDatas);
+
+      res.status(200).json(userDatas);
     } catch (err) {
       res.status(500).json(err);
     }
