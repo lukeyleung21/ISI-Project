@@ -31,6 +31,7 @@
         <div v-if="item[0].outOfStock=='F'">Item avaliable Now!</div>
         <div v-else>Out Of Stock</div>
     </v-col>
+    <v-btn @click="addToShoppingCart">Add To Shopping Cart</v-btn>
 
 </center>
 </v-sheet>
@@ -54,6 +55,18 @@ export default {
         loadData:async function() {
             fetch(api + this.productID).then((res)=>res.json()).then((data)=>this.item=data);
         },
+        addToShoppingCart () {
+          fetch('http://localhost:8000/product/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({userID: this.$store.getters.userID, productID:this.productID, qunantity: 1})
+          })
+          .then((response) => {
+            if (response.status == 200) {
+              window.location.reload()
+            }
+          });
+        }
     }
 }
 
