@@ -131,6 +131,15 @@ export default {
           })
           .then((response) => {
               if (response.status == 200) {
+              const url1 = 'http://localhost:8000/deleteShoppingcart/'
+                fetch(url1 + this.$store.getters.userID, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }})
+                .then((response) => {
+                  if (response.status == 200) {
+                    window.location.reload()
+                  }
+                })
               }
           })
         }
