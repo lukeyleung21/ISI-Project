@@ -259,7 +259,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     }
   });
 
-  api.post('/deleteShoppingcart/:userID', async (req,res) => {
+  api.post('/deleteShoppingcart/:userID', async (req,res) => { 
     if (req.params.userID == undefined) {return res.sendStatus(400); }
 
     let value = {
