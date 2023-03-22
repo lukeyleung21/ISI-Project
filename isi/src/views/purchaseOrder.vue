@@ -8,7 +8,7 @@
               <v-btn outlined @click="changeToHold()">hold</v-btn>&nbsp;
               <v-btn outlined @click="changeToPast()">Past</v-btn>&nbsp;
               <v-text-field label="Search" id="serach"  data-search  @input="changeToPOid()"></v-text-field>
-              <p2 style="color:blue">If you can't see anything but want to know other P.O number, you can click the "All" button or directly input the P.O number.</p2>
+              <p2 style="color:blue">If you can't see anything but want to know other P.O number, you can click the "ALL" button or directly input the P.O number.</p2>
             </tr>
           <tr>
           <th class="text-left">Staus</th>
