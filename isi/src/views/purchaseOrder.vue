@@ -86,14 +86,18 @@ export default {
                     const searchInput = document.querySelector("[data-search]")
                     searchInput.addEventListener("input", e => {
                     const value = e.target.value
-                    this.po_order=[]
-                    for (var x in data) {
-                        if (value == data[x].POID) {
-                            this.po_order.push(data[x])
+                    if (value == '') {
+                        this.data = this.alldata
+                    } else {
+                        this.po_order=[]
+                        for (var x in data) {
+                            if (value == data[x].POID) {
+                                this.po_order.push(data[x])
+                            }
+                            this.data = this.po_order
                         }
-                        this.data = this.po_order
                     }
-         
+                    
                     });
             });
         },
