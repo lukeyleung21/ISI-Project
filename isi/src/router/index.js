@@ -78,6 +78,11 @@ const routes = [
     props: true,
     component: ()=> import('../views/changeInformation.vue')
   },
+  {
+    path:'/AddProduct',
+    name:'AddProduct',
+    component: ()=> import('../views/AddProduct.vue')
+  },
   
 ]
 
