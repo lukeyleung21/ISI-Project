@@ -54,7 +54,7 @@
         <p v-if="success == true" style="color:green">The information has add.</p>
       </v-col>
     <v-col>
-        <v-btn @click="Addproduct()">Commit</v-btn>
+        <v-btn class="mr-4" @click="Addtoproduct()">Commit</v-btn>
     </v-col>
 </center>
 </v-sheet>
@@ -62,10 +62,8 @@
 </template>
 
 <script>
-import PictureInput from 'vue-picture-input'
 import router from '@/router'
 export default {
-    props: ['productID'],
     data(){
        return{
         success: false,
@@ -83,11 +81,10 @@ export default {
        }     
     },
     methods: {
-        
-        Addproduct() {
-            console.log(this.voltage)
+
+        Addtoproduct() {
             const url = 'http://localhost:8000/AddProduct'
-            fetch(url  , {
+            fetch(url , {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: this.name, brand: this.brand, price: this.price, voltage: this.voltage, electricalPlug: this.electricalPlug, image: this.imagelink })
@@ -96,7 +93,7 @@ export default {
                 if (response.status == 200) {
                     this.success = true
                     this.fail = false
-                    router.push("/shop");
+                    router.push("");
                 } else {
                     this.fail = true
                 }
