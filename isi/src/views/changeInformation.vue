@@ -9,7 +9,7 @@
     <v-sheet
   color="white"
   elevation="9"
-  height="800"
+  height="950"
   rounded
 >
 <center>
@@ -19,17 +19,39 @@
       :src= item[0].image
           ></v-img>
 
-      <v-col lg="8">Product: {{ item[0].name }}</v-col>
-      <v-col>Brand : {{ item[0].brand }}</v-col>
-      <v-col lg="8">
-        Price: ${{item[0].price}}</v-col>
-      <v-col lg="8">
-        Voltage: {{item[0].voltage}}</v-col>
-      <v-col lg="8">
-        ElectricalPlug: {{item[0].electricalPlug}}</v-col>
-      <v-col lg="8">
-        <div v-if="item[0].outOfStock=='F'">Item avaliable Now!</div>
-        <div v-else>Out Of Stock</div>
+      <v-col lg="4" >
+        <v-row>Product:</v-row>
+        <v-row><v-text-field v-model="item[0].name"></v-text-field></v-row>
+      </v-col>
+      
+      <v-col lg="4">
+        <v-row>Brand:</v-row>
+        <v-row><v-text-field v-model="item[0].brand" ></v-text-field></v-row>
+      </v-col>
+      <v-col lg="4">
+        <v-row>Price:</v-row>
+        <v-row><v-text-field label="$" v-model="item[0].price" ></v-text-field></v-row>
+      </v-col>
+      <v-col lg="4">
+        <v-row>Voltage:</v-row>
+        <v-row><select v-model="voltage">
+                <option disabled value="">Please select one</option>
+                <option>220</option>
+                <option>110</option>
+            </select></v-row>
+      </v-col>
+      <v-col lg="4">
+        <v-row>ElectricalPlug:</v-row>
+            <v-row><select v-model="electricalPlug">
+                <option disabled value="">Please select one</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+                <option>E</option>
+            </select></v-row>
+      </v-col>
+    <v-col>
+        <v-btn @click="changeValue()">Commit</v-btn>
     </v-col>
 </center>
 </v-sheet>
@@ -44,7 +66,9 @@ export default {
     props: ['productID'],
     data(){
        return{
-        item:[]
+        item:[],
+        voltage:'',
+        electricalPlug:''
        }
     },
     async created(){
@@ -54,17 +78,19 @@ export default {
         loadData:async function() {
             fetch(api + this.productID).then((res)=>res.json()).then((data)=>this.item=data);
         },
-        addToShoppingCart () {
-          fetch('http://localhost:8000/product/', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({userID: this.$store.getters.userID, productID:this.productID, qunantity: 1})
-          })
-          .then((response) => {
-            if (response.status == 200) {
-              window.location.reload()
-            }
-          });
+        changeValue() {
+            console.log(this.voltage)
+            const url = 'http://localhost:8000/changePV/'
+            fetch(url + this.productID, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productID: this.productID, item: this.item, voltage: this.voltage, electricalPlug: this.electricalPlug })
+            })
+            .then((response) => {
+                if (response.status == 200) {
+                    
+                }
+            })
         }
     }
 }

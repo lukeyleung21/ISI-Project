@@ -188,6 +188,32 @@ api.get('/shop', async (req, res) => {              //products listing
     }
   });
 
+  api.post('/changePV/:productID', async (req, res) => {              //change product information        
+    if (req.params.productID == undefined) {return res.sendStatus(400); }
+    if (req.body.electricalPlug  == undefined
+      || req.body.item[0].name == undefined
+      || req.body.item[0].brand == undefined
+      || req.body.item[0].price == undefined
+      || req.body.item[0].voltage == undefined) { return res.sendStatus(400); }
+  
+    const value = {
+      $productID: req.params.productID,
+      $name: req.body.item[0].name,
+      $brand: req.body.item[0].brand,
+      $price: req.body.item[0].price,
+      $voltage: req.body.item[0].voltage,
+      $electricalPlug: req.body.electricalPlug
+    }
+    console.log(req.params.productID)
+    const q = `UPDATE Product SET name = $name, brand = $brand, price = $price, voltage = $voltage, electricalPlug = $electricalPlug WHERE productID = $productID`;
+    try {
+      var result = db.run(q, value);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
   api.get('/product/:productID', async (req, res) => {              //ProductID
     if (req.params.productID == undefined) {return res.sendStatus(400); }
     

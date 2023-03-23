@@ -32,14 +32,14 @@
         <div v-else>Out Of Stock</div>
     </v-col>
     <v-btn v-if="this.$store.getters.userType != '0'" @click="addToShoppingCart">Add To Shopping Cart</v-btn>
-    <v-btn v-if="this.$store.getters.userType == '0'" to="changeInformation" link>Change Information</v-btn>
+    <v-btn v-if="this.$store.getters.userType == '0'" @click="Tochangepage(productID)">Change Information</v-btn>
 </center>
 </v-sheet>
 </v-container>
 </template>
     
 <script>
-
+import router from '@/router'
 const api = `http://localhost:8000/product/`
 export default {
     props: ['productID'],
@@ -66,7 +66,10 @@ export default {
               window.location.reload()
             }
           });
-        }
+        },
+        async Tochangepage(productID) {
+            router.push(`/changeInformation/${productID}`)
+        },
     }
 }
 
