@@ -4,9 +4,12 @@
 <v-col lg="8">
 <h1>Electric Appliance Shop🛒</h1>
 </v-col>
+<v-col justify="end" v-if="this.$store.getters.userType == '0'">
+  <v-text-field label="Search" id="search" data-search @input="searchID()"></v-text-field>
+</v-col>
 </v-row>
 <v-divider></v-divider>
-<v-row>
+<v-row >
 <v-col lg="5" class="mt-2">
 <v-card height="140px" width="500px">
 <v-card-title>
@@ -127,6 +130,7 @@ export default{
       order:"ASEC",
   filter_brand:"All",
       brand:["All"],
+      value:[],
     }
   },
   mounted:function(){
@@ -146,11 +150,41 @@ export default{
           this.brand.push(data[x].brand)
         }}
       })
+      const searchInput = document.querySelector("[data-search]")
+      searchInput.addEventListener("input", e => {
+        const values = e.target.value
+        this.value=[]
+        for (let x in this.items) {
+          if (values == this.items[x].productID || values == this.items[x].name) {
+            this.value.push(values)
+            console.log(this.value)
+          }
+        }
+      })
   },
   methods:{
     toDetail(x){
       router.push(`/product/${x}`)
     },
+
+    searchID() {
+      this.items = this.value
+      //console.log(this.value)
+      /*this.page=1
+      this.search=[[]]
+      let count = 0,countT=0
+      for(let x=0;x<this.items.length;x++){
+        
+        if(this.items[x].productID == this.product_ID[0]){
+          
+          if(count>=6){count=0;countT++;this.search[countT]=[]}
+          this.search[countT].push(this.items[x])
+          count+=1
+      }}
+      console.log(this.product_ID[0])
+      this.length_of_item=(Math.ceil(this.search.length))*/
+    },
+
     change(){
       this.page=1
       this.search=[[]]

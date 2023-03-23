@@ -1,5 +1,5 @@
 <template>
-<v-container fluid>
+    <v-container fluid>
     <v-row>
     <v-col lg="8">
     <h1>Electric Appliance Shop🛒</h1>
@@ -31,14 +31,13 @@
         <div v-if="item[0].outOfStock=='F'">Item avaliable Now!</div>
         <div v-else>Out Of Stock</div>
     </v-col>
-    <v-btn v-if="this.$store.getters.userType != '0'" @click="addToShoppingCart">Add To Shopping Cart</v-btn>
-    <v-btn v-if="this.$store.getters.userType == '0'" to="changeInformation" link>Change Information</v-btn>
 </center>
 </v-sheet>
 </v-container>
 </template>
-    
+
 <script>
+import router from '@/router'
 
 const api = `http://localhost:8000/product/`
 export default {
@@ -69,5 +68,4 @@ export default {
         }
     }
 }
-
 </script>
