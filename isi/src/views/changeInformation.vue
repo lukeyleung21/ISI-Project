@@ -21,16 +21,16 @@
 
       <v-col lg="4" >
         <v-row>Product:</v-row>
-        <v-row><v-text-field v-model="item[0].name"></v-text-field></v-row>
+        <v-row><v-text-field :rules="rules" v-model="item[0].name"></v-text-field></v-row>
       </v-col>
       
       <v-col lg="4">
         <v-row>Brand:</v-row>
-        <v-row><v-text-field v-model="item[0].brand" ></v-text-field></v-row>
+        <v-row><v-text-field :rules="rules"  v-model="item[0].brand" ></v-text-field></v-row>
       </v-col>
       <v-col lg="4">
         <v-row>Price:</v-row>
-        <v-row><v-text-field label="$" v-model="item[0].price" ></v-text-field></v-row>
+        <v-row><v-text-field  type="number" :rules="rules" label="$" v-model="item[0].price" ></v-text-field></v-row>
       </v-col>
       <v-col lg="4">
         <v-row>Voltage:</v-row>
@@ -50,6 +50,10 @@
                 <option>E</option>
             </select></v-row>
       </v-col>
+      <v-col>
+        <p v-if="fail == true" style="color:red">The information have some wrong.</p>
+        <p v-if="success == true" style="color:green">The information has changed.</p>
+      </v-col>
     <v-col>
         <v-btn @click="changeValue()">Commit</v-btn>
     </v-col>
@@ -60,17 +64,23 @@
 
 <script>
 import router from '@/router'
-
 const api = `http://localhost:8000/product/`
 export default {
     props: ['productID'],
     data(){
        return{
+        success: false,
+        fail: false,
         item:[],
         voltage:'',
-        electricalPlug:''
-       }
+        electricalPlug:'',
+        rules: [
+            (value) => !!value || "Required.",
+            (value) => (value || "").length <= 10 || "Max 10 characters",
+        ]
+       }     
     },
+        
     async created(){
         await this.loadData();
     },
@@ -88,7 +98,11 @@ export default {
             })
             .then((response) => {
                 if (response.status == 200) {
-                    
+                    this.success = true
+                    this.fail = false
+                    router.push("/product/" + this.productID);
+                } else {
+                    this.fail = true
                 }
             })
         }
