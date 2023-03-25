@@ -9,7 +9,7 @@
 </v-col>
 </v-row>
 <v-divider></v-divider>
-<v-row >
+<v-row v-if="this.$store.getters.userType != '0'">
 <v-col lg="5" class="mt-2">
 <v-card height="140px" width="500px">
 <v-card-title>
@@ -63,6 +63,9 @@ Price
 </v-card>
 </v-col>
 </v-row>
+<v-col v-if="this.$store.getters.userType == '0'">
+  <v-btn @click="ToAddProduct()">Add Product</v-btn>
+</v-col>
 <div class="mt-2">
 </div>
 <v-divider></v-divider>
@@ -157,6 +160,7 @@ export default{
         for (let x in this.items) {
           if (values == this.items[x].productID || values == this.items[x].name) {
             this.value.push(values)
+
             console.log(this.value)
           }
         }
@@ -183,6 +187,9 @@ export default{
       }}
       console.log(this.product_ID[0])
       this.length_of_item=(Math.ceil(this.search.length))*/
+    },
+    async ToAddProduct(){
+      router.push(`/AddProduct`)
     },
 
     change(){

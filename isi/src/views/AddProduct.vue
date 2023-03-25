@@ -13,24 +13,19 @@
   rounded
 >
 <center>
-<v-img
-      height="400"
-      width="400"
-      :src= item[0].image
-          ></v-img>
-
+    <v-col></v-col>
       <v-col lg="4" >
         <v-row>Product:</v-row>
-        <v-row><v-text-field :rules="rules" v-model="item[0].name"></v-text-field></v-row>
+        <v-row><v-text-field :rules="rules" v-model="name"></v-text-field></v-row>
       </v-col>
       
       <v-col lg="4">
         <v-row>Brand:</v-row>
-        <v-row><v-text-field :rules="rules"  v-model="item[0].brand" ></v-text-field></v-row>
+        <v-row><v-text-field :rules="rules"  v-model="brand" ></v-text-field></v-row>
       </v-col>
       <v-col lg="4">
         <v-row>Price:</v-row>
-        <v-row><v-text-field  type="number" :rules="rules" label="$" v-model="item[0].price" ></v-text-field></v-row>
+        <v-row><v-text-field  type="number" :rules="rules" label="$" v-model="price" ></v-text-field></v-row>
       </v-col>
       <v-col lg="4">
         <v-row>Voltage:</v-row>
@@ -50,12 +45,16 @@
                 <option>E</option>
             </select></v-row>
       </v-col>
+      <v-col lg="4">
+        <v-row>Image</v-row>
+        <v-row><v-text-field v-model="imagelink"></v-text-field></v-row>
+      </v-col>
       <v-col>
         <p v-if="fail == true" style="color:red">The information have some wrong.</p>
-        <p v-if="success == true" style="color:green">The information has changed.</p>
+        <p v-if="success == true" style="color:green">The information has add.</p>
       </v-col>
     <v-col>
-        <v-btn @click="changeValue()">Commit</v-btn>
+        <v-btn class="mr-4" @click="Addtoproduct()">Commit</v-btn>
     </v-col>
 </center>
 </v-sheet>
@@ -64,43 +63,37 @@
 
 <script>
 import router from '@/router'
-const api = `http://localhost:8000/product/`
 export default {
-    props: ['productID'],
     data(){
        return{
         success: false,
         fail: false,
-        item:[],
+        name:'',
+        brand:'',
+        price:'',
         voltage:'',
         electricalPlug:'',
+        imagelink:'',
         rules: [
             (value) => !!value || "Required.",
             (value) => (value || "").length <= 10 || "Max 10 characters",
-        ]
+        ],
        }     
     },
-        
-    async created(){
-        await this.loadData();
-    },
     methods: {
-        loadData:async function() {
-            fetch(api + this.productID).then((res)=>res.json()).then((data)=>this.item=data);
-        },
-        changeValue() {
-            console.log(this.voltage)
-            const url = 'http://localhost:8000/changePV/'
-            fetch(url + this.productID, {
+
+        Addtoproduct() {
+            const url = 'http://localhost:8000/AddProduct'
+            fetch(url , {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ productID: this.productID, item: this.item, voltage: this.voltage, electricalPlug: this.electricalPlug })
+                body: JSON.stringify({ name: this.name, brand: this.brand, price: this.price, voltage: this.voltage, electricalPlug: this.electricalPlug, image: this.imagelink })
             })
             .then((response) => {
                 if (response.status == 200) {
                     this.success = true
                     this.fail = false
-                    router.push("/product/" + this.productID);
+                    router.push("");
                 } else {
                     this.fail = true
                 }

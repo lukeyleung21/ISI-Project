@@ -188,6 +188,58 @@ api.get('/shop', async (req, res) => {              //products listing
     }
   });
 
+  api.post('/AddProduct', async (req, res) => {              //Add product information        
+    if (req.body.electricalPlug  == ''
+      || req.body.name == ''
+      || req.body.brand == ''
+      || req.body.price == ''
+      || req.body.voltage == ''
+      || req.body.image == '') { return res.sendStatus(400); }
+  
+    const value = {
+      $image: req.body.image,
+      $name: req.body.name,
+      $brand: req.body.brand,
+      $price: req.body.price,
+      $voltage: req.body.voltage,
+      $electricalPlug: req.body.electricalPlug
+    }
+
+    const q = `INSERT INTO Product (name, brand, price, voltage, electricalPlug) VALUES ($name, $brand, $price, $voltage, $electricalPlug)`;
+    try {
+      var result = db.run(q, value);
+      var userData = { productID: result.lastID}
+      res.status(200).json(userData);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+  api.post('/changePV/:productID', async (req, res) => {              //change product information        
+    if (req.params.productID == undefined) {return res.sendStatus(400); }
+    if (req.body.electricalPlug  == ''
+      || req.body.item[0].name == undefined
+      || req.body.item[0].brand == undefined
+      || req.body.item[0].price == undefined
+      || req.body.voltage == '') { return res.sendStatus(400); }
+  
+    const value = {
+      $productID: req.params.productID,
+      $name: req.body.item[0].name,
+      $brand: req.body.item[0].brand,
+      $price: req.body.item[0].price,
+      $voltage: req.body.voltage,
+      $electricalPlug: req.body.electricalPlug
+    }
+    const q = `UPDATE Product SET name = $name, brand = $brand, price = $price, voltage = $voltage, electricalPlug = $electricalPlug WHERE productID = $productID`;
+    try {
+      var result = db.run(q, value);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
   api.get('/product/:productID', async (req, res) => {              //ProductID
     if (req.params.productID == undefined) {return res.sendStatus(400); }
     
