@@ -166,7 +166,7 @@ api.get('/cancel/:POID', async (req, res) => {              //Purchase tracking 
   month = ('0' + (month + 1)).slice(-2);
   let date = dateObj.getDate();
   date = ('0' + date).slice(-2);
-  const today = `${year}-${month}-${date}`;
+  const today = `${year}/${month}/${date}`;
 
   const q = `UPDATE Purchase_Order SET status = 'cancelled', statusDate = $today, cancelBy = 'customer' WHERE POID = $POID`;
   try {
@@ -304,7 +304,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     month = ('0' + (month + 1)).slice(-2);
     let date = dateObj.getDate();
     date = ('0' + date).slice(-2);
-    const today = `${year}-${month}-${date}`;
+    const today = `${year}/${month}/${date}`;
     const q = `UPDATE Purchase_Order SET status = 'shipped', statusDate = $today WHERE POID = $POID`;
     try {
       const result = await db.all(q, today, POID);
@@ -322,7 +322,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     month = ('0' + (month + 1)).slice(-2);
     let date = dateObj.getDate();
     date = ('0' + date).slice(-2);
-    const today = `${year}-${month}-${date}`;
+    const today = `${year}/${month}/${date}`;
     const q = `UPDATE Purchase_Order SET status = 'hold', cancelBy = NULL, statusDate = $today WHERE POID = $POID`;
     try {
       const result = await db.all(q, today, POID);
@@ -340,7 +340,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     month = ('0' + (month + 1)).slice(-2);
     let date = dateObj.getDate();
     date = ('0' + date).slice(-2);
-    const today = `${year}-${month}-${date}`;
+    const today = `${year}/${month}/${date}`;
     const q = `UPDATE Purchase_Order SET status = 'cancelled', statusDate = $today, cancelBy = 'vendor' WHERE POID = $POID`;
     try {
       const result = await db.all(q, today, POID);
@@ -472,17 +472,13 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
   api.post('/pushtopurchase/:userID', async (req,res) => { 
     if (req.params.userID == undefined) {return res.sendStatus(400); }
     if (req.body.total_amount == undefined) {return res.sendStatus(400);}
-    
-
-    const date = new Date();
-    const currentDate = date.getFullYear() + "/" + date.getMonth() + "/" + date.getDay();
 
     let values = {
       $userID: req.params.userID,
       $total_amount: req.body.total_amount,
       $status: 'hold',
-      $purchaseDate: currentDate,
-      $statusDate: currentDate,
+      $purchaseDate: today,
+      $statusDate: today,
       $cancelBy: undefined,
     };
 
@@ -634,6 +630,8 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
   api.post('/pushtopurchase/:userID', async (req,res) => { 
     if (req.params.userID == undefined) {return res.sendStatus(400); }
     if (req.body.total_amount == undefined) {return res.sendStatus(400);}
+
+    console.log("1")
     
 
     const date = new Date();
