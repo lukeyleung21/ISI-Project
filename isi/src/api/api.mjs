@@ -635,9 +635,13 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     if (req.params.userID == undefined) {return res.sendStatus(400); }
     if (req.body.total_amount == undefined) {return res.sendStatus(400);}
     
-
-    const date = new Date();
-    const currentDate = date.getFullYear() + "/" + date.getMonth() + "/" + date.getDay();
+    const dateObj = new Date();
+    let year = dateObj.getFullYear();
+    let month = dateObj.getMonth();
+    month = ('0' + (month + 1)).slice(-2);
+    let date = dateObj.getDate();
+    date = ('0' + date).slice(-2);
+    const currentDate = `${year}/${month}/${date}`;   
 
     let values = {
       $userID: req.params.userID,
@@ -666,8 +670,8 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
       const q2 = 'INSERT INTO Purchase_Order_Item (POID, price, quantity, productID, amount) SELECT POID, price, quantity, sc.productID, price*quantity AS total FROM Product p, Shopping_cart sc, Purchase_Order po WHERE p.productID = sc.productID AND po.userID = sc.userID AND po.POID = $POID'
       const results = await db.run(q2,$POID);
       var userDatas = { POIID: results.lastID}
-
-      res.status(200).json(userDatas);
+      
+      res.status(200).json(results);
     } catch (err) {
       res.status(500).json(err);
     }

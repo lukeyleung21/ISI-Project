@@ -32,6 +32,10 @@
             <td><v-btn class="mr-4" @click="del(item)">delete</v-btn></td>
           </tr>
           <tr>
+            <td>Total amount :</td>
+            <td>{{ Totalnumber }}</td>
+          </tr>
+          <tr>
             <td><v-btn @click="Pushtopurchase(userData)">Confirm</v-btn></td>
           </tr>
         </tbody>
@@ -46,6 +50,15 @@ export default {
         userData: [],
         amount: [],
     }),
+    computed:{
+      Totalnumber (){
+        for (let i = 0; i < this.userData.length; i++) {
+          this.amount[i] = this.userData[i].quantity*this.userData[i].price;
+        }
+        const total_amount = this.amount.reduce(function(a,b){return a+b;}, 0);
+        return total_amount == 0 ? '0' : total_amount
+      }
+    },
     async created(){
         await this.checkUser();
         await this.loadData();
@@ -130,6 +143,8 @@ export default {
               body: JSON.stringify({ total_amount: total_amount})
           })
           .then((response) => {
+            const data = response
+            console.log(data)
               if (response.status == 200) {
               const url1 = 'http://localhost:8000/deleteShoppingcart/'
                 fetch(url1 + this.$store.getters.userID, {
