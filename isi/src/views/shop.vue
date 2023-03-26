@@ -134,37 +134,62 @@
     filter_brand:"All",
         brand:["All"],
         value:[],
+        p_id:[],
+        p_iditem:[],
       }
     },
     mounted:function(){
       fetch(api).then((res)=>res.json()).then((data)=> {
-        data.sort(function(a,b){return a.price - b.price})
-        this.length_of_item=(Math.ceil(data.length/6))
-        let count = 0,countT=0
-        this.items = JSON.parse(JSON.stringify(data))
-        this.items_reverse = JSON.parse(JSON.stringify(data)).reverse()
-        for(let x=0;x<this.items.length;x++){
-          if(count>=6){count=0;countT++;this.search[countT]=[]}
-          this.search[countT].push(this.items[x])
-          count+=1
-        }
-        for(let x in data){
-          if(this.brand.indexOf(data[x].brand)){
-            this.brand.push(data[x].brand)
-          }}
-        })
         const searchInput = document.querySelector("[data-search]")
         searchInput.addEventListener("input", e => {
-          const values = e.target.value
-          this.value=[]
-          for (let x in this.items) {
-            if (values == this.items[x].productID || values == this.items[x].name) {
-              this.value.push(values)
-  
-              console.log(this.value)
+          const value = e.target.value
+          if (value == '') {
+            data.sort(function(a,b){return a.price - b.price})
+            this.length_of_item=(Math.ceil(data.length/6))
+            let count = 0,countT=0
+            this.items = JSON.parse(JSON.stringify(data))
+            this.items_reverse = JSON.parse(JSON.stringify(data)).reverse()
+            for(let x=0;x<this.items.length;x++){
+              if(count>=6){count=0;countT++;this.search[countT]=[]}
+              this.search[countT].push(this.items[x])
+              count+=1
+            }
+            for(let x in data){
+              if(this.brand.indexOf(data[x].brand)){
+                this.brand.push(data[x].brand)
+            }}
+          } else {
+            if(isNaN(value)){
+              console.log('text')
+            } else {
+              console.log('number')
+              this.p_id=[]
+              for (var x in data) {
+                if (value == data[x].productID) {
+                  
+                  this.p_id.push(data[x].productID)
+                }
+                this.data = this.p_id
+              }
+              data.sort(function(a,b){return a.price - b.price})
+              console.log(data)
+              this.length_of_item=(Math.ceil(data.length/6))
+              let count = 0,countT=0
+              this.items = JSON.parse(JSON.stringify(data))
+              this.items_reverse = JSON.parse(JSON.stringify(data)).reverse()
+              for(let x=0;x<this.items.length;x++){
+                if(count>=6){count=0;countT++;this.search[countT]=[]}
+                this.search[countT].push(this.items[x])
+                count+=1
+              }
+              for(let x in data){
+                if(this.brand.indexOf(data[x].brand)){
+                  this.brand.push(data[x].brand)
+              }}
             }
           }
         })
+      })
     },
     methods:{
       toDetail(x){
