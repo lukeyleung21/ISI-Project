@@ -473,6 +473,14 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     if (req.params.userID == undefined) {return res.sendStatus(400); }
     if (req.body.total_amount == undefined) {return res.sendStatus(400);}
 
+    const dateObj = new Date();
+    let year = dateObj.getFullYear();
+    let month = dateObj.getMonth();
+    month = ('0' + (month + 1)).slice(-2);
+    let date = dateObj.getDate();
+    date = ('0' + date).slice(-2);
+    const today = `${year}/${month}/${date}`;
+
     let values = {
       $userID: req.params.userID,
       $total_amount: req.body.total_amount,
