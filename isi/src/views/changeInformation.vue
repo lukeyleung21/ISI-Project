@@ -35,15 +35,17 @@
       <v-col lg="4">
         <v-row>Voltage:</v-row>
         <v-row><select v-model="voltage">
-                <option disabled value="">Please select one</option>
+                <option v-if="voltage==''" disabled value="">{{item[0].voltage}}</option>
+                <option  v-if="voltage!=''" disabled value="">{{voltage}}</option>
                 <option>220</option>
                 <option>110</option>
             </select></v-row>
       </v-col>
       <v-col lg="4">
         <v-row>ElectricalPlug:</v-row>
-            <v-row><select v-model="electricalPlug">
-                <option disabled value="">Please select one</option>
+            <v-row><select v-model="electricalPlug" >
+                <option v-if="electricalPlug==''" disabled value="">{{item[0].electricalPlug}}</option>
+                <option v-if="electricalPlug!=''" disabled value="">{{electricalPlug}}</option>
                 <option>A</option>
                 <option>B</option>
                 <option>C</option>
@@ -72,7 +74,7 @@ export default {
         success: false,
         fail: false,
         item:[],
-        voltage:'',
+        voltage: '',
         electricalPlug:'',
         rules: [
             (value) => !!value || "Required.",
@@ -86,10 +88,17 @@ export default {
     },
     methods: {
         loadData:async function() {
-            fetch(api + this.productID).then((res)=>res.json()).then((data)=>this.item=data);
+            fetch(api + this.productID).then((res)=>res.json()).then((data)=>
+            this.item=data
+            );
         },
         changeValue() {
-            console.log(this.voltage)
+            if(this.voltage==''){
+                this.voltage = this.item[0].voltage
+            }
+            if(this.electricalPlug==''){
+                this.electricalPlug = this.item[0].electricalPlug
+            }
             const url = 'http://localhost:8000/changePV/'
             fetch(url + this.productID, {
                 method: 'POST',
