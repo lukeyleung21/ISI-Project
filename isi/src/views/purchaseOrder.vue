@@ -7,7 +7,7 @@
               <v-btn outlined @click="changeToPending()">pending</v-btn>&nbsp;
               <v-btn outlined @click="changeToHold()">hold</v-btn>&nbsp;
               <v-btn outlined @click="changeToPast()">Past</v-btn>&nbsp;
-              <v-text-field label="Search" id="serach" data-search @input="changeToPOid()"></v-text-field>
+              <v-text-field label="Search" id="serach"  data-search  @input="changeToPOid()"></v-text-field>
             </tr>
           <tr>
           <th class="text-left">Staus</th>
@@ -85,13 +85,18 @@ export default {
                     const searchInput = document.querySelector("[data-search]")
                     searchInput.addEventListener("input", e => {
                     const value = e.target.value
-                    this.po_order=[]
-                    for (var x in data) {
-                        if (value == data[x].POID) {
-                            this.po_order.push(data[x])
+                    if (value == '') {
+                        this.data = this.alldata
+                    } else {
+                        this.po_order=[]
+                        for (var x in data) {
+                            if (value == data[x].POID) {
+                                this.po_order.push(data[x])
+                            }
                             this.data = this.po_order
-                        } 
+                        }
                     }
+                    
                     });
             });
         },
@@ -112,9 +117,7 @@ export default {
         },
         changeToPOid() {
             this.data=this.po_order
-            
-        }
-
+        },
     },
     
     
