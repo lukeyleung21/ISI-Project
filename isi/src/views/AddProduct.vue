@@ -16,7 +16,7 @@
     <v-col></v-col>
       <v-col lg="4" >
         <v-row>Product:</v-row>
-        <v-row><v-text-field :rules="rules" v-model="name"></v-text-field></v-row>
+        <v-row><v-text-field :rules="rulename" v-model="name"></v-text-field></v-row>
       </v-col>
       
       <v-col lg="4">
@@ -77,6 +77,10 @@ export default {
         rules: [
             (value) => !!value || "Required.",
             (value) => (value || "").length <= 10 || "Max 10 characters",
+        ],
+        rulename: [
+            (value) => !!value || "Required.",
+            (value) => (value || "").length <= 25 || "Max 10 characters",
         ],
        }     
     },

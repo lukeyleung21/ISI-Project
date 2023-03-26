@@ -196,18 +196,20 @@ api.get('/shop', async (req, res) => {              //products listing
       || req.body.voltage == ''
       || req.body.image == '') { return res.sendStatus(400); }
   
-    const value = {
+    let value = {
       $image: req.body.image,
       $name: req.body.name,
       $brand: req.body.brand,
       $price: req.body.price,
       $voltage: req.body.voltage,
-      $electricalPlug: req.body.electricalPlug
+      $electricalPlug: req.body.electricalPlug,
+      $outOfStock: 'F'
     }
 
-    const q = `INSERT INTO Product (name, brand, price, voltage, electricalPlug) VALUES ($name, $brand, $price, $voltage, $electricalPlug)`;
+    
     try {
-      var result = db.run(q, value);
+      const q = `INSERT INTO Product (name, brand, price, voltage, electricalPlug, image, outOfStock) VALUES ($name, $brand, $price, $voltage, $electricalPlug, $image, $outOfStock)`;
+      const result =await db.run(q, value);
       var userData = { productID: result.lastID}
       res.status(200).json(userData);
     } catch (err) {
