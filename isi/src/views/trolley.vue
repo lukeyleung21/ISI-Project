@@ -49,6 +49,7 @@ export default {
     data: () => ({
         userData: [],
         amount: [],
+        poid: []
     }),
     computed:{
       Totalnumber (){
@@ -143,8 +144,7 @@ export default {
               body: JSON.stringify({ total_amount: total_amount})
           })
           .then((response) => {
-            const data = response
-            console.log(data)
+
               if (response.status == 200) {
               const url1 = 'http://localhost:8000/deleteShoppingcart/'
                 fetch(url1 + this.$store.getters.userID, {
@@ -152,7 +152,14 @@ export default {
                         headers: { 'Content-Type': 'application/json' }})
                 .then((response) => {
                   if (response.status == 200) {
-                    window.location.reload()
+                    const url = 'http://localhost:8000/POID/'
+                    fetch(url)
+                    .then((response) => response.json())
+                    .then((data) => { 
+                      let resdata=JSON.parse(JSON.stringify(data[0]));
+                      this.poid = Object.values(resdata)
+                      router.push(`/purchaseTrackingDetail/${this.poid[0]}`)
+                    });
                   }
                 })
               }

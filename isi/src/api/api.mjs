@@ -494,7 +494,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     let values = {
       $userID: req.params.userID,
       $total_amount: req.body.total_amount,
-      $status: 'hold',
+      $status: 'shipped',
       $purchaseDate: today,
       $statusDate: today,
       $cancelBy: undefined,
@@ -662,7 +662,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     let values = {
       $userID: req.params.userID,
       $total_amount: req.body.total_amount,
-      $status: 'hold',
+      $status: 'shipped',
       $purchaseDate: currentDate,
       $statusDate: currentDate,
       $cancelBy: undefined,
