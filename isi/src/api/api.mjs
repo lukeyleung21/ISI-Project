@@ -469,6 +469,16 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     }
   });
 
+  api.get('/POID', async (req, res) => {              //trolley personal data
+    const q = `SELECT POID FROM Purchase_Order`;
+    try {
+      const result = await db.all(q);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
   api.post('/pushtopurchase/:userID', async (req,res) => { 
     if (req.params.userID == undefined) {return res.sendStatus(400); }
     if (req.body.total_amount == undefined) {return res.sendStatus(400);}
@@ -509,7 +519,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
       const results = await db.run(q2,$POID);
       var userDatas = { POIID: results.lastID}
 
-      res.status(200).json(userDatas);
+      res.status(200).json(userData);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -677,7 +687,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
       const results = await db.run(q2,$POID);
       var userDatas = { POIID: results.lastID}
       
-      res.status(200).json(results);
+      res.status(200).json(userData);
     } catch (err) {
       res.status(500).json(err);
     }
