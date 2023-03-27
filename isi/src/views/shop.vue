@@ -36,7 +36,7 @@
   </v-row>
   </v-card>
   </v-col>
-  <v-col class="mt-2">
+  <v-col class="mt-2" v-if="this.$store.getters.userType != '0'">
   <v-card height="140px" width="400px">
   <v-card-title>
   Price Order
@@ -158,8 +158,24 @@
         searchInput.addEventListener("input", e => {
           const values = e.target.value
           if (values == '') {
-            
+          this.search=[[]]
+          this.brand = ["All"]
+          data.sort(function(a,b){return a.price - b.price})
+          this.length_of_item=(Math.ceil(data.length/6))
+          let count = 0,countT=0
+          this.items = JSON.parse(JSON.stringify(data))
+          this.items_reverse = JSON.parse(JSON.stringify(data)).reverse()
+          for(let x=0;x<this.items.length;x++){
+            if(count>=6){count=0;countT++;this.search[countT]=[]}
+              this.search[countT].push(this.items[x])
+              count+=1
+            }
+          for(let x in data){
+            if(this.brand.indexOf(data[x].brand)){
+              this.brand.push(data[x].brand)
+          }}
           } else {
+            this.value=[]
             for(let x in this.items){
               if(values == this.items[x].productID || this.items[x].name.includes(values)){
                 this.value.push(this.items[x])
@@ -169,6 +185,8 @@
             this.length_of_item=(Math.ceil(this.value.length/6))
             let count = 0,countT=0
             this.value_reverse = JSON.parse(JSON.stringify(this.value)).reverse()
+            this.search=[[]]
+            this.brand = ["All"]
             for(let x=0;x<this.value.length;x++){
               if(count>=6){count=0;countT++;this.search[countT]=[]}
                 this.search[countT].push(this.value[x])
