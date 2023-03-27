@@ -147,10 +147,11 @@ api.get('/trackingDetail/:POID', async (req, res) => {              //Purchase t
 
   let POID = parseInt(req.params.POID)
 
-  const q = `SELECT * FROM Purchase_Order_Item poi, Product p WHERE poi.POID = $POID AND poi.productID = p.productID`;
+  const q = `SELECT poi.POID, poi.productID, poi.price, poi.quantity, poi.amount, p.name, p.brand, p.voltage, p.electricalPlug, p.image, p.outOfStock FROM Purchase_Order_Item poi, Product p WHERE poi.POID = $POID AND poi.productID = p.productID`;
   try {
     const result = await db.all(q, POID);
     res.json(result);
+    console.log(result)
   } catch (err) {
     res.status(500).json(err);
   }
@@ -496,7 +497,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     let values = {
       $userID: req.params.userID,
       $total_amount: req.body.total_amount,
-      $status: 'shipped',
+      $status: 'pending',
       $purchaseDate: today,
       $statusDate: today,
       $cancelBy: undefined,
@@ -664,7 +665,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     let values = {
       $userID: req.params.userID,
       $total_amount: req.body.total_amount,
-      $status: 'shipped',
+      $status: 'pending',
       $purchaseDate: currentDate,
       $statusDate: currentDate,
       $cancelBy: undefined,
