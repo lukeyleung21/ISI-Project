@@ -140,53 +140,47 @@
     },
     mounted:function(){
       fetch(api).then((res)=>res.json()).then((data)=> {
+        data.sort(function(a,b){return a.price - b.price})
+        this.length_of_item=(Math.ceil(data.length/6))
+        let count = 0,countT=0
+        this.items = JSON.parse(JSON.stringify(data))
+        this.items_reverse = JSON.parse(JSON.stringify(data)).reverse()
+        for(let x=0;x<this.items.length;x++){
+          if(count>=6){count=0;countT++;this.search[countT]=[]}
+            this.search[countT].push(this.items[x])
+            count+=1
+          }
+        for(let x in data){
+          if(this.brand.indexOf(data[x].brand)){
+            this.brand.push(data[x].brand)
+        }}
         const searchInput = document.querySelector("[data-search]")
         searchInput.addEventListener("input", e => {
-          const value = e.target.value
-          if (value == '') {
-            data.sort(function(a,b){return a.price - b.price})
-            this.length_of_item=(Math.ceil(data.length/6))
+          const values = e.target.value
+          if (values == '') {
+            
+          } else {
+            for(let x in this.items){
+              if(values == this.items[x].productID || this.items[x].name.includes(values)){
+                this.value.push(this.items[x])
+              }
+            }
+            this.value.sort(function(a,b){return a.price - b.price})
+            this.length_of_item=(Math.ceil(this.value.length/6))
             let count = 0,countT=0
-            this.items = JSON.parse(JSON.stringify(data))
-            this.items_reverse = JSON.parse(JSON.stringify(data)).reverse()
+            this.items = JSON.parse(JSON.stringify(this.value))
+            console.log(items)
+            /*this.items_reverse = JSON.parse(JSON.stringify(this.value)).reverse()
+            console.log(items)
             for(let x=0;x<this.items.length;x++){
               if(count>=6){count=0;countT++;this.search[countT]=[]}
-              this.search[countT].push(this.items[x])
-              count+=1
-            }
-            for(let x in data){
-              if(this.brand.indexOf(data[x].brand)){
-                this.brand.push(data[x].brand)
-            }}
-          } else {
-            if(isNaN(value)){
-              console.log('text')
-            } else {
-              console.log('number')
-              this.p_id=[]
-              for (var x in data) {
-                if (value == data[x].productID) {
-                  
-                  this.p_id.push(data[x].productID)
-                }
-                this.data = this.p_id
-              }
-              data.sort(function(a,b){return a.price - b.price})
-              console.log(data)
-              this.length_of_item=(Math.ceil(data.length/6))
-              let count = 0,countT=0
-              this.items = JSON.parse(JSON.stringify(data))
-              this.items_reverse = JSON.parse(JSON.stringify(data)).reverse()
-              for(let x=0;x<this.items.length;x++){
-                if(count>=6){count=0;countT++;this.search[countT]=[]}
                 this.search[countT].push(this.items[x])
                 count+=1
-              }
-              for(let x in data){
-                if(this.brand.indexOf(data[x].brand)){
-                  this.brand.push(data[x].brand)
-              }}
             }
+            for(let x in this.value){
+              if(this.brand.indexOf(value[x].brand)){
+              this.brand.push(this.value[x].brand)
+            }}*/
           }
         })
       })
@@ -197,7 +191,7 @@
       },
   
       searchID() {
-        this.items = this.value
+        //this.items = this.value
         //console.log(this.value)
         /*this.page=1
         this.search=[[]]
