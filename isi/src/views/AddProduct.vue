@@ -97,7 +97,7 @@ export default {
                 if (response.status == 200) {
                     this.success = true
                     this.fail = false
-                    router.push("");
+                    router.push("/");
                 } else {
                     this.fail = true
                 }
