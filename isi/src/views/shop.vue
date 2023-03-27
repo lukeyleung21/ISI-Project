@@ -134,7 +134,7 @@
     filter_brand:"All",
         brand:["All"],
         value:[],
-        p_id:[],
+        value_reverse:[],
         p_iditem:[],
       }
     },
@@ -165,22 +165,19 @@
                 this.value.push(this.items[x])
               }
             }
-            this.value.sort(function(a,b){return a.price - b.price})
+            this.value.sort(function(a,b){return a.price - b.price})            
             this.length_of_item=(Math.ceil(this.value.length/6))
             let count = 0,countT=0
-            this.items = JSON.parse(JSON.stringify(this.value))
-            console.log(items)
-            /*this.items_reverse = JSON.parse(JSON.stringify(this.value)).reverse()
-            console.log(items)
-            for(let x=0;x<this.items.length;x++){
+            this.value_reverse = JSON.parse(JSON.stringify(this.value)).reverse()
+            for(let x=0;x<this.value.length;x++){
               if(count>=6){count=0;countT++;this.search[countT]=[]}
-                this.search[countT].push(this.items[x])
+                this.search[countT].push(this.value[x])
                 count+=1
             }
             for(let x in this.value){
-              if(this.brand.indexOf(value[x].brand)){
+              if(this.brand.indexOf(this.value[x].brand)){
               this.brand.push(this.value[x].brand)
-            }}*/
+            }}
           }
         })
       })

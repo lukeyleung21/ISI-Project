@@ -158,7 +158,7 @@ export default {
                     .then((data) => { 
                       let resdata=JSON.parse(JSON.stringify(data[0]));
                       this.poid = Object.values(resdata)
-                      router.push(`/purchaseTrackingDetail/${this.poid[0]}`)
+                      router.push(`/purchaseOrderDetail/${this.poid[0]}`)
                     });
                   }
                 })
