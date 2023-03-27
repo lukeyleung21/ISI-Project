@@ -472,7 +472,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
   });
 
   api.get('/POID', async (req, res) => {              //trolley personal data
-    const q = `SELECT POID FROM Purchase_Order`;
+    const q = `SELECT MAX(POID) FROM Purchase_Order`;
     try {
       const result = await db.all(q);
       res.json(result);
