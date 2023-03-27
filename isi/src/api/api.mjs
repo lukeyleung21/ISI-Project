@@ -118,7 +118,7 @@ api.get('/tracking/:userID', async (req, res) => {              //Purchase track
 
   let userID = parseInt(req.params.userID)
 
-  const q = `SELECT * FROM Purchase_Order WHERE userID = $userID ORDER BY purchaseDate DESC`;
+  const q = `SELECT * FROM Purchase_Order WHERE userID = $userID ORDER BY purchaseDate DESC, POID DESC`;
   try {
     const result = await db.all(q, userID);
     res.json(result);
@@ -279,7 +279,7 @@ api.get('/shop', async (req, res) => {              //products listing
   });
 
 api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
-    const q = `SELECT status, POID, fName, totalAmount, purchaseDate FROM Purchase_Order po, User u WHERE po.userID = u.userID ORDER BY purchaseDate DESC`
+    const q = `SELECT status, POID, fName, totalAmount, purchaseDate FROM Purchase_Order po, User u WHERE po.userID = u.userID ORDER BY purchaseDate DESC, POID DESC`
     try {
       const result = await db.all(q);
       res.json(result);
