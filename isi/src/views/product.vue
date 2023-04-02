@@ -31,7 +31,7 @@
         <div v-if="item[0].outOfStock=='F'">Item avaliable Now!</div>
         <div v-else>Out Of Stock</div>
     </v-col>
-    <v-btn v-if="this.$store.getters.userType != '0'" @click="addToShoppingCart">Add To Shopping Cart</v-btn>
+    <v-btn v-if="this.$store.getters.userType == 1" @click="addToShoppingCart">Add To Shopping Cart</v-btn>
     <v-btn v-if="this.$store.getters.userType == '0'" @click="Tochangepage(productID)">Change Information</v-btn>
 </center>
 </v-sheet>
