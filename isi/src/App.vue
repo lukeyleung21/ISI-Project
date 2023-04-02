@@ -58,6 +58,10 @@
             <v-list-item-icon><v-icon color="amber accent-2" size="30px">mdi-newspaper-variant-outline</v-icon></v-list-item-icon>
             <v-list-item-title>Purchase Tracking</v-list-item-title>
           </v-list-item>
+          <v-list-item v-if="this.$store.getters.userID == '0'" to="/salesReport" link>
+            <v-list-item-icon><v-icon color="amber accent-2" size="30px">mdi-account-cash-outline</v-icon></v-list-item-icon>
+            <v-list-item-title>Sales Report</v-list-item-title>
+          </v-list-item>
   
           
         </v-list>
