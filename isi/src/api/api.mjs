@@ -147,7 +147,7 @@ api.get('/trackingDetail/:POID', async (req, res) => {              //Purchase t
 
   let POID = parseInt(req.params.POID)
 
-  const q = `SELECT poi.POID, poi.productID, poi.price, poi.quantity, poi.amount, p.name, p.brand, p.voltage, p.electricalPlug, p.image, p.outOfStock FROM Purchase_Order_Item poi, Product p WHERE poi.POID = $POID AND poi.productID = p.productID`;
+  const q = `SELECT poi.POID, poi.POIID, poi.productID, poi.price, poi.quantity, poi.amount, p.name, p.brand, p.voltage, p.electricalPlug, p.image, p.outOfStock FROM Purchase_Order_Item poi, Product p WHERE poi.POID = $POID AND poi.productID = p.productID`;
   try {
     const result = await db.all(q, POID);
     res.json(result);
@@ -706,5 +706,49 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
       res.status(500).json(err);
     }
   });
+
+  api.get('/rcCheck/:POIID/:productID/:userID', async (req, res) => {              //rc check
+    if (req.params.POIID == undefined || req.params.productID == undefined || req.params.userID == undefined) {return res.sendStatus(400); }
+
+    let values = {
+      $POIID: parseInt(req.params.POIID),
+      $productID: parseInt(req.params.productID),
+      $userID: parseInt(req.params.userID),
+    };
+  
+    const q = `SELECT * FROM Rating_Comment WHERE productID = $productID and userID = $userID and POIID = $POIID`;
+    try {
+      const result = await db.all(q, values);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+  api.post('/rcSubmit/:POIID/:productID/:userID', async (req, res) => {              //rc submit  
+    if (req.params.POIID == undefined || req.params.productID == undefined || req.params.userID == undefined) {return res.sendStatus(400); }
+    if (req.body.rating == undefined) {return res.sendStatus(400); }
+
+    let value = {
+      $POIID: parseInt(req.params.POIID),
+      $productID: parseInt(req.params.productID),
+      $userID: parseInt(req.params.userID),
+      $score: req.body.rating,
+      $comment: req.body.comment,
+    };
+
+    const q1 = `UPDATE Rating_Comment SET score = $score, comment = $comment, times = 1 WHERE productID = $productID and userID = $userID and POIID = $POIID`;
+    const q2 = `SELECT POID FROM Purchase_Order_Item WHERE POIID = $POIID`
+  
+    try { 
+      var result = await db.run(q1, value);
+      var result2 = await db.all(q2, parseInt(req.params.POIID))
+      res.json(result2)
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+
 
 export default api;

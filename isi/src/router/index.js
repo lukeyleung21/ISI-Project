@@ -88,6 +88,12 @@ const routes = [
     name:'salesReport',
     component: ()=> import('../views/salesReport.vue')
   },
+  {
+    path:'/ratingAndComment/:POIID/:productID',
+    name:'ratingAndComment',
+    props: true,
+    component: ()=> import('../views/ratingAndComment.vue')
+  },
   
 ]
 

@@ -43,12 +43,15 @@
             <th class="text-left">Quantity</th>
             <th class="text-left">Price</th>
             <th class="text-left">Subtotal</th>
+            <th class="text-left" width="15%">Rating</th>
         </tr></thead><tbody>
         <tr v-for="product in productDetail" :key="product.name">
             <td>{{ product.name }}</td>
             <td>{{ product.quantity }}</td>
             <td>{{ product.price }}</td>
             <td>{{ product.amount }}</td>
+            <td v-if="product.times == 0"><v-btn color="primary" @click="toRC(product.POIID, product.productID)">Rating & Comment</v-btn></td>
+            <td v-else>Rated</td>
         </tr></tbody></template>
         </v-simple-table> 
       </v-card-text>
@@ -91,8 +94,21 @@ export default {
             fetch('http://localhost:8000/trackingDetail/' + this.POID)
             .then(response => response.json())
             .then(data => {
-                this.productDetail = data
+                var temp = data
+                
+                for (var x in temp) {
+                    fetch(`http://localhost:8000/rcCheck/${temp[x].POIID}/${temp[x].productID}/${this.$store.getters.userID}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        temp[x].times = data[0].times
+                    })
+                }
+                this.productDetail = temp
             })
+
+            
+
+            
         },
         async cancel(){
             fetch('http://localhost:8000/cancel/' + this.POID)
@@ -104,6 +120,9 @@ export default {
                 }
             })
         },
+        toRC(POIID, productID) {
+            router.push(`/ratingAndComment/${POIID}/${productID}`)
+        }
     },
 }
 
