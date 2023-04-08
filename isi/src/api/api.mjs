@@ -256,6 +256,17 @@ api.get('/shop', async (req, res) => {              //products listing
 
   });
 
+  api.get('/rate', async (req, res) => {              //rating listing
+    const q = "SELECT * FROM Rating_Comment";
+    
+    try {
+      const result = await db.all(q);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
   api.get('/rate/:productID',async(req,res)=>{                        //Rating_comment
     if (req.params.productID == undefined) {return res.sendStatus(400); }
     let productID = parseInt(req.params.productID)

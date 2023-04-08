@@ -86,7 +86,6 @@
         </div>
       </v-col>
   </v-row>
-  
     
   
   
@@ -210,7 +209,7 @@
           }
         })
       }
-      ),fetch(rate).then((res)=>res.json()).then((data)=>this.rate=data)
+      ),fetch(rate_api).then((res)=>res.json()).then((data)=>this.rate=data).then(console.log(this.rate));
     },
     methods:{
       toDetail(x){
