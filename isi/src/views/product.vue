@@ -9,7 +9,6 @@
     <v-sheet
   color="white"
   elevation="9"
-  height="800"
   rounded
 >
 <center>
@@ -44,11 +43,21 @@
   :value="avg"
 ></v-rating>
 <v-divider></v-divider>
-<v-row>
-<v-col>
-  
-</v-col>
-</v-row>
+    <!-- comment area-->
+    <h1>Comment Area</h1>
+    <v-card v-for="comment in SlicedList()" :key="comment.userID"
+    class="mx-auto"
+    max-width="344"
+    outlined
+>
+<center><v-card-title>{{ comment.fName }}</v-card-title></center>
+{{ comment.comment }}
+</v-card>
+<v-pagination
+        v-model="page"
+        :length=Math.ceil(comment.length/4)
+        circle
+      ></v-pagination>
   </center>
 </v-sheet>
 </v-container>
@@ -63,7 +72,9 @@ export default {
     data(){
        return{
         item:[],
-        rate:[],
+        comment:[],
+        page:1,
+        NumOfRating:0,
         avg:0
        }
     },
@@ -76,11 +87,14 @@ export default {
             fetch(rate + this.productID)
   .then((res) => res.json())
   .then((data) => {
-    this.rate = data;
-    return this.rate.reduce((acc, val) => acc + val.score, 0);
+    data.forEach(element => {
+      if(element.userID!=0 && element.times!=0)this.comment.push(element);
+    })
+    this.NumOfRating = data.length
+    return data.reduce((acc, val) => acc + val.score, 0);
   })
   .then((total) => {
-    this.avg = total / this.rate.length;
+    this.avg = total / this.NumOfRating;
   })
   .catch((error) => {
     console.log(error);
@@ -100,6 +114,11 @@ export default {
         },
         async Tochangepage(productID) {
             router.push(`/changeInformation/${productID}`)
+        },
+        SlicedList(){
+          let start = (this.page - 1) * 4;
+          let end = start + 4
+          return this.comment.slice(start,end)
         }
     }
 }

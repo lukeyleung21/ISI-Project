@@ -269,7 +269,7 @@ api.get('/shop', async (req, res) => {              //products listing
   api.get('/rate/:productID',async(req,res)=>{                        //Rating_comment
     if (req.params.productID == undefined) {return res.sendStatus(400); }
     let productID = parseInt(req.params.productID)
-    const q = `SELECT * FROM Rating_Comment WHERE productID = $productID`;
+    const q = `SELECT R.productID,R.userID,R.score,R.comment,R.times,U.fName FROM Rating_Comment R JOIN User U ON U.userID = R.userID WHERE productID = $productID`;
     try{
       var result = await db.all(q,productID);
       res.json(result)
