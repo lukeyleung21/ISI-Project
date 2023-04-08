@@ -151,7 +151,6 @@ api.get('/trackingDetail/:POID', async (req, res) => {              //Purchase t
   try {
     const result = await db.all(q, POID);
     res.json(result);
-    console.log(result)
   } catch (err) {
     res.status(500).json(err);
   }
@@ -312,6 +311,30 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     try {
       const result = await db.all(q, today, POID);
       res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+  api.get('/shipped/:POID', async (req, res) => {             //Add rating After vendor Pending to Shipped
+    let POID = parseInt(req.params.POID)
+    
+    const q1 = `SELECT poi.productID, po.userID, poi.POIID FROM Purchase_Order po, Purchase_Order_Item poi WHERE po.POID = $POID AND poi.POID = $POID`;
+    const q2 = `INSERT INTO Rating_Comment (productID, userID, POID, POIID, times) VALUES ($productID, $userID, $POID, $POIID, $times)`;
+    try {
+      const result = await db.all(q1, POID);
+
+      for (var x in result) {
+        var value = {
+          $productID: result[x].productID,
+          $userID: result[x].userID,
+          $POID: POID,
+          $POIID: result[x].POIID,
+          $times: 0
+        }
+
+        const result2 = await db.all(q2, value)
+      }
     } catch (err) {
       res.status(500).json(err);
     }
@@ -707,18 +730,14 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     }
   });
 
-  api.get('/rcCheck/:POIID/:productID/:userID', async (req, res) => {              //rc check
-    if (req.params.POIID == undefined || req.params.productID == undefined || req.params.userID == undefined) {return res.sendStatus(400); }
+  api.get('/rcCheck/:POID', async (req, res) => {              //rc check
+    if (req.params.POID == undefined) {return res.sendStatus(400); }
 
-    let values = {
-      $POIID: parseInt(req.params.POIID),
-      $productID: parseInt(req.params.productID),
-      $userID: parseInt(req.params.userID),
-    };
+    var POID = parseInt(req.params.POID)
   
-    const q = `SELECT * FROM Rating_Comment WHERE productID = $productID and userID = $userID and POIID = $POIID`;
+    const q = `SELECT * FROM Rating_Comment WHERE POID = $POID`;
     try {
-      const result = await db.all(q, values);
+      const result = await db.all(q, POID);
       res.json(result);
     } catch (err) {
       res.status(500).json(err);

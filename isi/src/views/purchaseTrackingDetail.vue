@@ -1,6 +1,7 @@
 <template>
     <v-card class="mx-auto" max-width="auto" variant="outlined">
       <v-card-item>
+        <v-btn color="primary" @click="test">test</v-btn>
         <div>
           <div class="text-h6 mb-1" v-if="data.status == 'cancelled'">
             P.O. number: {{ data.POID }}<br>
@@ -72,6 +73,7 @@
         </tr></tbody></template>
         </v-simple-table> 
       </v-card-text>
+      
     </v-card>
 </template>
 
@@ -113,20 +115,17 @@ export default {
             .then(data => {
                 var temp = data
                 
-                for (var x in temp) {
-                    fetch(`http://localhost:8000/rcCheck/${temp[x].POIID}/${temp[x].productID}/${this.$store.getters.userID}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        temp[x].times = data[0].times
-                    })
-                }
-                this.productDetail = temp
+                fetch(`http://localhost:8000/rcCheck/${this.POID}`)
+                .then(response => response.json())
+                .then(data2 => {
+                    for (var x in temp) {
+                        temp[x].times = data2[x].times
+                    }
+                    this.productDetail = temp
+                })    
             })
-
-            
-
-            
         },
+        
         async cancel(){
             fetch('http://localhost:8000/cancel/' + this.POID)
             .then(response => {
@@ -139,7 +138,11 @@ export default {
         },
         toRC(POIID, productID) {
             router.push(`/ratingAndComment/${POIID}/${productID}`)
-        }
+        },
+        async test() {
+            console.log(this.productDetail)
+        },
+
     },
 }
 
