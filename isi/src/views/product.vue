@@ -41,7 +41,7 @@
   length="5"
   readonly
   size="30"
-
+  :value="avg"
 ></v-rating>
   </center>
 </v-sheet>
@@ -57,7 +57,8 @@ export default {
     data(){
        return{
         item:[],
-        rate:[]
+        rate:[],
+        avg:0
        }
     },
     async created(){
@@ -66,7 +67,18 @@ export default {
     methods: {
         loadData:async function() {
             fetch(api + this.productID).then((res)=>res.json()).then((data)=>this.item=data);
-            fetch(rate + this.productID).then((res)=>res.json()).then((data)=>this.rate=data);
+            fetch(rate + this.productID)
+  .then((res) => res.json())
+  .then((data) => {
+    this.rate = data;
+    return this.rate.reduce((acc, val) => acc + val.score, 0);
+  })
+  .then((total) => {
+    this.avg = total / this.rate.length;
+  })
+  .catch((error) => {
+    console.log(error);
+  });
         },
         addToShoppingCart () {
           fetch('http://localhost:8000/product/', {
@@ -82,7 +94,7 @@ export default {
         },
         async Tochangepage(productID) {
             router.push(`/changeInformation/${productID}`)
-        },
+        }
     }
 }
 
