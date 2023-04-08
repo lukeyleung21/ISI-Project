@@ -86,10 +86,10 @@
         </div>
       </v-col>
   </v-row>
-    
+   
   
   
-      <v-divider></v-divider>
+      <v-divider></v-divider> {{ item.score }}
   <!-- lower part -->
       <v-card-title>  
       <v-col lg="7">
@@ -112,7 +112,7 @@
   length="5"
   readonly
   size="30"
-  :value="3"
+  :value=search.score
   class="ml-16"
 ></v-rating>
   </v-card>
@@ -209,7 +209,7 @@
           }
         })
       }
-      ),fetch(rate_api).then((res)=>res.json()).then((data)=>this.rate=data).then(console.log(this.rate));
+      ),fetch(rate_api).then((res)=>res.json()).then((data)=>this.rate=data);
     },
     methods:{
       toDetail(x){
@@ -284,5 +284,5 @@
           }
       }}
     }
-    }
+};
   </script>

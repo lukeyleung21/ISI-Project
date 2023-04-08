@@ -43,6 +43,12 @@
   size="30"
   :value="avg"
 ></v-rating>
+<v-divider></v-divider>
+<v-row>
+<v-col>
+  
+</v-col>
+</v-row>
   </center>
 </v-sheet>
 </v-container>
