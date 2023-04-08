@@ -1,7 +1,6 @@
 <template>
     <v-card class="mx-auto" max-width="auto" variant="outlined">
       <v-card-item>
-        <v-btn color="primary" @click="test">test</v-btn>
         <div>
           <div class="text-h6 mb-1" v-if="data.status == 'cancelled'">
             P.O. number: {{ data.POID }}<br>
@@ -119,7 +118,9 @@ export default {
                 .then(response => response.json())
                 .then(data2 => {
                     for (var x in temp) {
-                        temp[x].times = data2[x].times
+                        if (data2[x] != undefined && data2[x].POIID == temp[x].POIID) {
+                            temp[x].times = data2[x].times
+                        }
                     }
                     this.productDetail = temp
                 })    
@@ -139,9 +140,7 @@ export default {
         toRC(POIID, productID) {
             router.push(`/ratingAndComment/${POIID}/${productID}`)
         },
-        async test() {
-            console.log(this.productDetail)
-        },
+
 
     },
 }
