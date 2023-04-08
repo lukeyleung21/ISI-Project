@@ -217,6 +217,23 @@ api.get('/shop', async (req, res) => {              //products listing
     }
   });
 
+  api.patch('/changeStock/:productID', async(req,res) =>{
+    if (req.params.productID == undefined) {return res.sendStatus(400);}
+    if(req.body.outOfStock == 'T' ){req.body.outOfStock = "F"}
+    const value ={
+      productID: parseInt(req.params.productID),
+      $outOfStock : req.body.outOfStock
+    }
+    const q = 'UPDATE Product SET outOfStock = CASE WHEN outOfStock = "T" THEN "F" ELSE "T" END WHERE productID = ?';
+    const values = [req.params.productID];
+    try {
+      const result = await db.run(q, values);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+});
+    
   api.post('/changePV/:productID', async (req, res) => {              //change product information        
     if (req.params.productID == undefined) {return res.sendStatus(400); }
     if (req.body.electricalPlug  == ''

@@ -32,6 +32,7 @@
     </v-col>
     <v-btn v-if="this.$store.getters.userType == 1" @click="addToShoppingCart">Add To Shopping Cart</v-btn>
     <v-btn v-if="this.$store.getters.userType == '0'" @click="Tochangepage(productID)">Change Information</v-btn>
+    <v-btn v-if="this.$store.getters.userType == '0'" @click="TochangeStock(productID)" class="ml-7">Change Stock</v-btn>
     <!-- rating and comment -->
     <v-rating
   background-color="green lighten-2"
@@ -44,15 +45,17 @@
 ></v-rating>
 <v-divider></v-divider>
     <!-- comment area-->
-    <h1>Comment Area</h1>
+    <h1>Comment Area Below</h1>
+<v-divider></v-divider>
     <v-card v-for="comment in SlicedList()" :key="comment.userID"
-    class="mx-auto"
-    max-width="344"
-    outlined
->
-<center><v-card-title>{{ comment.fName }}</v-card-title></center>
-{{ comment.comment }}
-</v-card>
+      v-if="comment.length!=0"
+      class="mx-auto"
+      max-width="344"
+      outlined
+    >
+      <center><v-card-title>{{ comment.fName }}</v-card-title></center>
+      {{ comment.comment }}
+    </v-card>
 <v-pagination
         v-model="page"
         :length=Math.ceil(comment.length/4)
@@ -119,8 +122,16 @@ export default {
           let start = (this.page - 1) * 4;
           let end = start + 4
           return this.comment.slice(start,end)
-        }
+        },
+  TochangeStock(productID){
+    fetch(`http://localhost:8000/changeStock/${productID}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ outOfStock : this.item[0].outOfStock }),
+    headers: {
+      'Content-Type': 'application/json'
     }
-}
+  })
+  .then(window.location.reload())}}}
+
 
 </script>
