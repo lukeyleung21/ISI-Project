@@ -36,7 +36,7 @@
         </div>
       </v-card-item>
 
-      <v-card-text>
+      <v-card-text v-if="this.data.status == 'shipped'">
         <v-simple-table height="auto"><template v-slot:default><thead>
         <tr>
             <th class="text-left">Product name</th>
@@ -55,6 +55,24 @@
         </tr></tbody></template>
         </v-simple-table> 
       </v-card-text>
+
+      <v-card-text v-else>
+        <v-simple-table height="auto"><template v-slot:default><thead>
+        <tr>
+            <th class="text-left">Product name</th>
+            <th class="text-left">Quantity</th>
+            <th class="text-left">Price</th>
+            <th class="text-left">Subtotal</th>
+        </tr></thead><tbody>
+        <tr v-for="product in productDetail" :key="product.name">
+            <td>{{ product.name }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.amount }}</td>
+        </tr></tbody></template>
+        </v-simple-table> 
+      </v-card-text>
+      
     </v-card>
 </template>
 
@@ -96,20 +114,19 @@ export default {
             .then(data => {
                 var temp = data
                 
-                for (var x in temp) {
-                    fetch(`http://localhost:8000/rcCheck/${temp[x].POIID}/${temp[x].productID}/${this.$store.getters.userID}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        temp[x].times = data[0].times
-                    })
-                }
-                this.productDetail = temp
+                fetch(`http://localhost:8000/rcCheck/${this.POID}`)
+                .then(response => response.json())
+                .then(data2 => {
+                    for (var x in temp) {
+                        if (data2[x] != undefined && data2[x].POIID == temp[x].POIID) {
+                            temp[x].times = data2[x].times
+                        }
+                    }
+                    this.productDetail = temp
+                })    
             })
-
-            
-
-            
         },
+        
         async cancel(){
             fetch('http://localhost:8000/cancel/' + this.POID)
             .then(response => {
@@ -122,7 +139,9 @@ export default {
         },
         toRC(POIID, productID) {
             router.push(`/ratingAndComment/${POIID}/${productID}`)
-        }
+        },
+
+
     },
 }
 
