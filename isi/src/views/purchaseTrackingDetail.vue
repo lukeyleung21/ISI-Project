@@ -36,7 +36,7 @@
         </div>
       </v-card-item>
 
-      <v-card-text>
+      <v-card-text v-if="this.data.status == 'shipped'">
         <v-simple-table height="auto"><template v-slot:default><thead>
         <tr>
             <th class="text-left">Product name</th>
@@ -52,6 +52,23 @@
             <td>{{ product.amount }}</td>
             <td v-if="product.times == 0"><v-btn color="primary" @click="toRC(product.POIID, product.productID)">Rating & Comment</v-btn></td>
             <td v-else>Rated</td>
+        </tr></tbody></template>
+        </v-simple-table> 
+      </v-card-text>
+
+      <v-card-text v-else>
+        <v-simple-table height="auto"><template v-slot:default><thead>
+        <tr>
+            <th class="text-left">Product name</th>
+            <th class="text-left">Quantity</th>
+            <th class="text-left">Price</th>
+            <th class="text-left">Subtotal</th>
+        </tr></thead><tbody>
+        <tr v-for="product in productDetail" :key="product.name">
+            <td>{{ product.name }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.amount }}</td>
         </tr></tbody></template>
         </v-simple-table> 
       </v-card-text>
