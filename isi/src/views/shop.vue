@@ -106,7 +106,16 @@
     x-large
   >Detail</v-btn></v-col>
       </v-card-title>
-      
+      <v-rating
+  background-color="green lighten-2"
+  color="warning"
+  hover
+  length="5"
+  readonly
+  size="30"
+  :value="3"
+  class="ml-16"
+></v-rating>
   </v-card>
   
   </v-row>
@@ -122,6 +131,7 @@
   import router from '@/router'
   
   const api = "http://localhost:8000/shop"
+  const rate_api = "http://localhost:8000/rate"
   export default{
     data(){
       return{
@@ -136,6 +146,7 @@
         value:[],
         value_reverse:[],
         p_iditem:[],
+        rate:[]
       }
     },
     mounted:function(){
@@ -198,7 +209,8 @@
             }}
           }
         })
-      })
+      }
+      ),fetch(rate).then((res)=>res.json()).then((data)=>this.rate=data)
     },
     methods:{
       toDetail(x){

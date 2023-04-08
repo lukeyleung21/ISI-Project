@@ -33,7 +33,17 @@
     </v-col>
     <v-btn v-if="this.$store.getters.userType == 1" @click="addToShoppingCart">Add To Shopping Cart</v-btn>
     <v-btn v-if="this.$store.getters.userType == '0'" @click="Tochangepage(productID)">Change Information</v-btn>
-</center>
+    <!-- rating and comment -->
+    <v-rating
+  background-color="green lighten-2"
+  color="warning"
+  hover
+  length="5"
+  readonly
+  size="30"
+
+></v-rating>
+  </center>
 </v-sheet>
 </v-container>
 </template>
@@ -41,11 +51,13 @@
 <script>
 import router from '@/router'
 const api = `http://localhost:8000/product/`
+const rate = `http://localhost:8000/rate/`
 export default {
     props: ['productID'],
     data(){
        return{
-        item:[]
+        item:[],
+        rate:[]
        }
     },
     async created(){
@@ -54,6 +66,7 @@ export default {
     methods: {
         loadData:async function() {
             fetch(api + this.productID).then((res)=>res.json()).then((data)=>this.item=data);
+            fetch(rate + this.productID).then((res)=>res.json()).then((data)=>this.rate=data);
         },
         addToShoppingCart () {
           fetch('http://localhost:8000/product/', {

@@ -256,6 +256,17 @@ api.get('/shop', async (req, res) => {              //products listing
 
   });
 
+  api.get('/rate/:productID',async(req,res)=>{                        //Rating_comment
+    if (req.params.productID == undefined) {return res.sendStatus(400); }
+    let productID = parseInt(req.params.productID)
+    const q = `SELECT * FROM Rating_Comment WHERE productID = $productID`;
+    try{
+      var result = await db.all(q,productID);
+      res.json(result)
+    }catch(err)
+  {res.status(500).json(err)}
+  })
+
   api.get('/trolley/:userID', async (req, res) => {              //trolley personal data
     let userID = parseInt(req.params.userID)
     const q = `SELECT p.productID, name, price, quantity FROM Shopping_cart sc, Product p WHERE userID = $userID AND sc.productID = p.productID`;
