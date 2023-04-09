@@ -86,8 +86,7 @@
         </div>
       </v-col>
   </v-row>
-  
-    
+   
   
   
       <v-divider></v-divider>
@@ -106,7 +105,16 @@
     x-large
   >Detail</v-btn></v-col>
       </v-card-title>
-      
+      <v-rating
+  background-color="green lighten-2"
+  color="warning"
+  hover
+  length="5"
+  readonly
+  size="30"
+  :value=item.rate
+  class="ml-16"
+></v-rating>
   </v-card>
   
   </v-row>
@@ -122,6 +130,7 @@
   import router from '@/router'
   
   const api = "http://localhost:8000/shop"
+  const rate_api = "http://localhost:8000/rate"
   export default{
     data(){
       return{
@@ -131,16 +140,28 @@
         items:[],
         items_reverse:[],
         order:"Asec",
-    filter_brand:"All",
+        filter_brand:"All",
         brand:["All"],
         value:[],
         value_reverse:[],
         p_iditem:[],
+        rate:[]
       }
     },
     mounted:function(){
-      fetch(api).then((res)=>res.json()).then((data)=> {
-        data.sort(function(a,b){return a.price - b.price})
+      Promise.all([fetch(api).then((res)=>res.json()),fetch(rate_api).then((res)=>res.json())])
+      .then(([data,ratedata])=> {
+        function mergerData(ratedata) {
+  return data.map((obj) => {
+    const { productID, ...rest } = obj;
+    const rateArray = ratedata.filter((r) => r.productID === productID);
+    const rateSum = rateArray.reduce((acc, cur) => acc + cur.score, 0); // 添加初始值0
+    const rateAvg = rateArray.length ? rateSum / rateArray.length : 0;
+    return Object.assign({}, rest, { productID, rate: rateAvg });
+  });
+}
+      data = mergerData(ratedata);
+      data.sort(function(a,b){return a.price - b.price})      //sorting
         this.length_of_item=(Math.ceil(data.length/6))
         let count = 0,countT=0
         this.items = JSON.parse(JSON.stringify(data))
@@ -198,7 +219,9 @@
             }}
           }
         })
-      })
+
+  }
+      )
     },
     methods:{
       toDetail(x){
@@ -273,5 +296,5 @@
           }
       }}
     }
-    }
+};
   </script>

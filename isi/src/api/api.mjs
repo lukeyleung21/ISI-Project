@@ -217,6 +217,23 @@ api.get('/shop', async (req, res) => {              //products listing
     }
   });
 
+  api.patch('/changeStock/:productID', async(req,res) =>{
+    if (req.params.productID == undefined) {return res.sendStatus(400);}
+    if(req.body.outOfStock == 'T' ){req.body.outOfStock = "F"}
+    const value ={
+      productID: parseInt(req.params.productID),
+      $outOfStock : req.body.outOfStock
+    }
+    const q = 'UPDATE Product SET outOfStock = CASE WHEN outOfStock = "T" THEN "F" ELSE "T" END WHERE productID = ?';
+    const values = [req.params.productID];
+    try {
+      const result = await db.run(q, values);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+});
+    
   api.post('/changePV/:productID', async (req, res) => {              //change product information        
     if (req.params.productID == undefined) {return res.sendStatus(400); }
     if (req.body.electricalPlug  == ''
@@ -254,6 +271,28 @@ api.get('/shop', async (req, res) => {              //products listing
     {res.status(500).json(err)}
 
   });
+
+  api.get('/rate', async (req, res) => {              //rating listing
+    const q = "SELECT productID,score FROM Rating_Comment";
+    
+    try {
+      const result = await db.all(q);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+  api.get('/rate/:productID',async(req,res)=>{                        //Rating_comment
+    if (req.params.productID == undefined) {return res.sendStatus(400); }
+    let productID = parseInt(req.params.productID)
+    const q = `SELECT R.productID,R.userID,R.score,R.comment,R.times,U.fName FROM Rating_Comment R JOIN User U ON U.userID = R.userID WHERE productID = $productID`;
+    try{
+      var result = await db.all(q,productID);
+      res.json(result)
+    }catch(err)
+  {res.status(500).json(err)}
+  })
 
   api.get('/trolley/:userID', async (req, res) => {              //trolley personal data
     let userID = parseInt(req.params.userID)
