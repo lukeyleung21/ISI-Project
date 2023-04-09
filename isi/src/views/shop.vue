@@ -89,7 +89,7 @@
    
   
   
-      <v-divider></v-divider> {{ item.score }}
+      <v-divider></v-divider>
   <!-- lower part -->
       <v-card-title>  
       <v-col lg="7">
@@ -112,7 +112,7 @@
   length="5"
   readonly
   size="30"
-  :value=search.score
+  :value=item.rate
   class="ml-16"
 ></v-rating>
   </v-card>
@@ -140,7 +140,7 @@
         items:[],
         items_reverse:[],
         order:"Asec",
-    filter_brand:"All",
+        filter_brand:"All",
         brand:["All"],
         value:[],
         value_reverse:[],
@@ -149,8 +149,19 @@
       }
     },
     mounted:function(){
-      fetch(api).then((res)=>res.json()).then((data)=> {
-        data.sort(function(a,b){return a.price - b.price})
+      Promise.all([fetch(api).then((res)=>res.json()),fetch(rate_api).then((res)=>res.json())])
+      .then(([data,ratedata])=> {
+        function mergerData(ratedata) {
+  return data.map((obj) => {
+    const { productID, ...rest } = obj;
+    const rateArray = ratedata.filter((r) => r.productID === productID);
+    const rateSum = rateArray.reduce((acc, cur) => acc + cur.score, 0); // 添加初始值0
+    const rateAvg = rateArray.length ? rateSum / rateArray.length : 0;
+    return Object.assign({}, rest, { productID, rate: rateAvg });
+  });
+}
+      data = mergerData(ratedata);
+      data.sort(function(a,b){return a.price - b.price})      //sorting
         this.length_of_item=(Math.ceil(data.length/6))
         let count = 0,countT=0
         this.items = JSON.parse(JSON.stringify(data))
@@ -208,8 +219,9 @@
             }}
           }
         })
-      }
-      ),fetch(rate_api).then((res)=>res.json()).then((data)=>this.rate=data);
+
+  }
+      )
     },
     methods:{
       toDetail(x){
