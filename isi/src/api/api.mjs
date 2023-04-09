@@ -273,7 +273,7 @@ api.get('/shop', async (req, res) => {              //products listing
   });
 
   api.get('/rate', async (req, res) => {              //rating listing
-    const q = "SELECT productID,score FROM Rating_Comment";
+    const q = "SELECT userID,productID,score,times FROM Rating_Comment";
     
     try {
       const result = await db.all(q);
