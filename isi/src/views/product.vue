@@ -54,7 +54,7 @@
       outlined
     >
       <center><v-card-title>{{ comment.fName }}</v-card-title></center>
-      {{ comment.comment }}
+      Comment:{{ comment.comment }}
     </v-card>
 <v-pagination
         v-model="page"
