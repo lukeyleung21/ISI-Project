@@ -42,6 +42,7 @@
   readonly
   size="30"
   :value="avg"
+  half-increments
 ></v-rating>
 <v-divider></v-divider>
     <!-- comment area-->
@@ -54,7 +55,17 @@
       outlined
     >
       <center><v-card-title>{{ comment.fName }}</v-card-title></center>
-      Comment:{{ comment.comment }}
+      <v-card-subtitle>{{ comment.comment }}</v-card-subtitle>
+      <v-rating
+  background-color="green lighten-2"
+  color="warning"
+  hover
+  length="5"
+  readonly
+  size="30"
+  :value=comment.score
+  half-increments
+></v-rating>
     </v-card>
 <v-pagination
         v-model="page"
@@ -93,8 +104,8 @@ export default {
     data.forEach(element => {
       if(element.userID!=0 && element.times!=0)this.comment.push(element);
     })
-    this.NumOfRating = data.length
-    return data.reduce((acc, val) => acc + val.score, 0);
+    this.NumOfRating = this.comment.length
+    return this.comment.reduce((acc, val) => acc + val.score, 0);
   })
   .then((total) => {
     this.avg = total / this.NumOfRating;
