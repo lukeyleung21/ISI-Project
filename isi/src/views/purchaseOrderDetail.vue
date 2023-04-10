@@ -29,7 +29,8 @@
             Customer name: {{ data.fName }}<br>
             Address: {{ data.address }}<br>
             Total amount: {{ data.totalAmount }}<br>    
-            Purchase order status: {{ data.status }} <v-btn color="primary" @click="hold">Hold</v-btn> <v-btn color="primary" @click="ship">ship</v-btn> <v-btn color="error" @click="vcancel">Cancel</v-btn>
+            Purchase order status: {{ data.status }} <v-btn color="primary" @click="hold">Hold</v-btn> <v-btn v-if="this.hasOutOfStockProduct == false" color="primary" @click="ship">ship</v-btn> <v-btn color="error" @click="vcancel">Cancel</v-btn>
+            <p style="color:red;" v-if="this.hasOutOfStockProduct == true">Product (id: {{ this.outOfStockProduct }}) is out of stock, you cannot ship this order now.</p>
           </div>
 
           <div class="text-h6 mb-1" v-else-if="data.status == 'hold'">
@@ -38,7 +39,8 @@
             Customer name: {{ data.fName }}<br>
             Address: {{ data.address }}<br>
             Total amount: {{ data.totalAmount }}<br>    
-            Purchase order status: {{ data.status }}<v-btn color="primary" @click="ship">ship</v-btn> <v-btn color="error" @click="vcancel">Cancel</v-btn>
+            Purchase order status: {{ data.status }} <v-btn v-if="this.hasOutOfStockProduct == false" color="primary" @click="ship">ship</v-btn> <v-btn color="error" @click="vcancel">Cancel</v-btn>
+            <p style="color:red;" v-if="this.hasOutOfStockProduct == true">Product (id: {{ this.outOfStockProduct }}) is out of stock, you cannot ship this order now.</p>
           </div>
         </div>
       </v-card-item>
@@ -74,7 +76,8 @@ export default {
     data: () => ({
         data:[],
         productDetail:[],
-        
+        outOfStockProduct: '',
+        hasOutOfStockProduct: false,
     }),
 
     async created(){
@@ -95,6 +98,14 @@ export default {
             .then(response => response.json())
             .then(data => {
                 this.productDetail = data
+                var temp = []
+                for (let x in data) {
+                    if (data[x].outOfStock == 'T'){
+                        temp.push(data[x].productID)
+                        this.hasOutOfStockProduct = true
+                    }
+                }
+                this.outOfStockProduct = temp.join(', ')
             })
         },
 
