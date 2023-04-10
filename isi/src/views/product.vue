@@ -41,7 +41,7 @@
   length="5"
   readonly
   size="30"
-  :value="avg"
+  :value="score"
   half-increments
 ></v-rating>
 <v-divider></v-divider>
@@ -55,17 +55,7 @@
       outlined
     >
       <center><v-card-title>{{ comment.fName }}</v-card-title></center>
-      <v-card-subtitle>{{ comment.comment }}</v-card-subtitle>
-      <v-rating
-  background-color="green lighten-2"
-  color="warning"
-  hover
-  length="5"
-  readonly
-  size="30"
-  :value=comment.score
-  half-increments
-></v-rating>
+      <v-card-subtitle>Comment :{{ comment.comment }}</v-card-subtitle>
     </v-card>
 <v-pagination
         v-model="page"
@@ -81,6 +71,7 @@
 import router from '@/router'
 const api = `http://localhost:8000/product/`
 const rate = `http://localhost:8000/rate/`
+const comment =`http://localhost:8000/comment/`
 export default {
     props: ['productID'],
     data(){
@@ -89,7 +80,7 @@ export default {
         comment:[],
         page:1,
         NumOfRating:0,
-        avg:0
+        score:0
        }
     },
     async created(){
@@ -98,17 +89,13 @@ export default {
     methods: {
         loadData:async function() {
             fetch(api + this.productID).then((res)=>res.json()).then((data)=>this.item=data);
-            fetch(rate + this.productID)
-  .then((res) => res.json())
-  .then((data) => {
-    data.forEach(element => {
-      if(element.userID!=0 && element.times!=0)this.comment.push(element);
-    })
-    this.NumOfRating = this.comment.length
-    return this.comment.reduce((acc, val) => acc + val.score, 0);
-  })
-  .then((total) => {
-    this.avg = total / this.NumOfRating;
+            Promise.all([fetch(rate + this.productID).then((res)=>res.json()),fetch(comment+this.productID).then((res)=>res.json())])     
+  .then(([rate,comment]) => {
+    console.log(rate)
+    console.log(comment)
+    this.score = rate[0].score
+    comment.forEach(element => {
+      if(element.times!=0){this.comment.push(element);};})
   })
   .catch((error) => {
     console.log(error);

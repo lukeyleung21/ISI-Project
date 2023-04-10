@@ -155,10 +155,9 @@
         function mergerData(ratedata) {
   return data.map((obj) => {
     const { productID, ...rest } = obj;
-    const rateArray = ratedata.filter((r) => r.productID == productID && r.times != 0 && r.userID!=0 ); // 添加判断条件
-    const rateSum = rateArray.reduce((acc, cur) => acc + cur.score, 0); // 添加初始值0
-    const rateAvg = rateArray.length ? rateSum / rateArray.length : 0;
-    return Object.assign({}, rest, { productID, rate: rateAvg });
+    const rateArray = ratedata.find((r) => r.productID == productID && r.times != 0 ); // 添加判断条件
+    const rate = rateArray ? rateArray.score : undefined;
+    return Object.assign({}, { productID, ...rest, rate });
   });
 }
       data = mergerData(ratedata);
