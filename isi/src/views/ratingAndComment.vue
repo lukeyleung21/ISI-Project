@@ -64,6 +64,7 @@ export default {
                 fetch(`http://localhost:8000/rcCheck/${this.POIID}/${this.productID}/${this.$store.getters.userID}`)
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data)
                     if(data[0] == undefined || data[0].times != 0) {
                         this.$router.push("/purchaseTracking")
                     }
@@ -91,7 +92,6 @@ export default {
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 this.$router.push(`/purchaseTrackingDetail/${data[0].POID}`)
             })
 

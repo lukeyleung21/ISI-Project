@@ -355,11 +355,12 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     }
   });
 
-  api.get('/shipped/:POID', async (req, res) => {             //Add rating After vendor Pending to Shipped
+  api.get('/shipped/:POID', async (req, res) => {             //Add comment After vendor Pending to Shipped
     let POID = parseInt(req.params.POID)
     
     const q1 = `SELECT poi.productID, po.userID, poi.POIID FROM Purchase_Order po, Purchase_Order_Item poi WHERE po.POID = $POID AND poi.POID = $POID`;
-    const q2 = `INSERT INTO Rating_Comment (productID, userID, POID, POIID, times) VALUES ($productID, $userID, $POID, $POIID, $times)`;
+    const q2 = `INSERT INTO Comment (productID, userID, POIID, times) VALUES ($productID, $userID, $POIID, $times)`;
+
     try {
       const result = await db.all(q1, POID);
 
@@ -367,7 +368,6 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
         var value = {
           $productID: result[x].productID,
           $userID: result[x].userID,
-          $POID: POID,
           $POIID: result[x].POIID,
           $times: 0
         }
@@ -769,12 +769,13 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     }
   });
 
-  api.get('/rcCheck/:POID', async (req, res) => {              //rc check
+  api.get('/rcCheckT/:POID', async (req, res) => {              //rc check
     if (req.params.POID == undefined) {return res.sendStatus(400); }
 
     var POID = parseInt(req.params.POID)
   
-    const q = `SELECT * FROM Rating_Comment WHERE POID = $POID`;
+    const q = `SELECT c.POIID, c.times FROM Comment c, Purchase_Order_Item poi WHERE poi.POID = $POID AND poi.POIID = c.POIID`;
+    
     try {
       const result = await db.all(q, POID);
       res.json(result);
@@ -783,25 +784,61 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     }
   });
 
+  api.get('/rcCheck/:POIID/:productID/:userID', async (req, res) => {              //rc check
+    if (req.params.POIID == undefined || req.params.productID == undefined || req.params.userID == undefined) {return res.sendStatus(400); }
+
+    let value = {
+      $POIID: parseInt(req.params.POIID),
+      $productID: parseInt(req.params.productID),
+      $userID: parseInt(req.params.userID)
+    }
+  
+    const q = `SELECT * FROM Comment WHERE POIID = $POIID AND productID = $productID AND userID = $userID`;
+    
+    try {
+      const result = await db.all(q, value);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+
   api.post('/rcSubmit/:POIID/:productID/:userID', async (req, res) => {              //rc submit  
     if (req.params.POIID == undefined || req.params.productID == undefined || req.params.userID == undefined) {return res.sendStatus(400); }
     if (req.body.rating == undefined) {return res.sendStatus(400); }
+
+    let value1 = {
+      $productID: parseInt(req.params.productID),
+    }
 
     let value = {
       $POIID: parseInt(req.params.POIID),
       $productID: parseInt(req.params.productID),
       $userID: parseInt(req.params.userID),
-      $score: req.body.rating,
       $comment: req.body.comment,
     };
 
-    const q1 = `UPDATE Rating_Comment SET score = $score, comment = $comment, times = 1 WHERE productID = $productID and userID = $userID and POIID = $POIID`;
-    const q2 = `SELECT POID FROM Purchase_Order_Item WHERE POIID = $POIID`
+    const q1 = `SELECT * FROM Rating WHERE productID = $productID`;
+    const q2 = `UPDATE Rating SET score = $score, number = $number WHERE productID = $productID`;
+
+    const q3 = `UPDATE Comment SET comment = $comment, times = 1 WHERE productID = $productID and userID = $userID and POIID = $POIID`;
+    const q4 = `SELECT POID FROM Purchase_Order_Item WHERE POIID = $POIID`
   
     try { 
-      var result = await db.run(q1, value);
-      var result2 = await db.all(q2, parseInt(req.params.POIID))
-      res.json(result2)
+      var result1 = await db.all(q1, parseInt(req.params.productID));
+
+      let value2 = {
+        $score: (Math.round((parseInt(req.body.rating) + result1[0].score * result1[0].number) / (result1[0].number + 1) * 10) / 10),
+        $number: (result1[0].number + 1),
+        $productID: parseInt(req.params.productID)
+      }
+      
+      var result2 = await db.run(q2, value2);
+      
+      var result3 = await db.run(q3, value);
+      var result4 = await db.all(q4, parseInt(req.params.POIID))
+      res.json(result4)
     } catch (err) {
       res.status(500).json(err);
     }

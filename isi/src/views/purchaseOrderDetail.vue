@@ -103,7 +103,6 @@ export default {
             .then(response => {
                 if (response.status == 200) {
                     fetch('http://localhost:8000/shipped/' + this.POID)
-                    
                     window.location.reload()
                 } else {
                     console.log("fail")

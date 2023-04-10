@@ -114,7 +114,7 @@ export default {
             .then(data => {
                 var temp = data
                 
-                fetch(`http://localhost:8000/rcCheck/${this.POID}`)
+                fetch(`http://localhost:8000/rcCheckT/${this.POID}`)
                 .then(response => response.json())
                 .then(data2 => {
                     for (var x in temp) {
