@@ -273,7 +273,7 @@ api.get('/shop', async (req, res) => {              //products listing
   });
 
   api.get('/rate', async (req, res) => {              //rating listing
-    const q = "SELECT userID,productID,score,times FROM Rating_Comment";
+    const q = "SELECT * FROM Rating";
     
     try {
       const result = await db.all(q);
@@ -286,7 +286,18 @@ api.get('/shop', async (req, res) => {              //products listing
   api.get('/rate/:productID',async(req,res)=>{                        //Rating_comment
     if (req.params.productID == undefined) {return res.sendStatus(400); }
     let productID = parseInt(req.params.productID)
-    const q = `SELECT R.productID,R.userID,R.score,R.comment,R.times,U.fName FROM Rating_Comment R JOIN User U ON U.userID = R.userID WHERE productID = $productID`;
+    const q = `SELECT * FROM Rating WHERE productID = $productID `;
+    try{
+      var result = await db.all(q,productID);
+      res.json(result)
+    }catch(err)
+  {res.status(500).json(err)}
+  })
+
+    api.get('/comment/:productID',async(req,res)=>{                        //Rating_comment
+    if (req.params.productID == undefined) {return res.sendStatus(400); }
+    let productID = parseInt(req.params.productID)
+    const q = `SELECT U.fName,C.comment,C.times FROM Comment C JOIN User U ON U.userID = C.userID WHERE C.productID = $productID `;
     try{
       var result = await db.all(q,productID);
       res.json(result)
