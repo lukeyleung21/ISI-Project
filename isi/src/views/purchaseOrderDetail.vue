@@ -29,7 +29,7 @@
             Customer name: {{ data.fName }}<br>
             Address: {{ data.address }}<br>
             Total amount: {{ data.totalAmount }}<br>    
-            Purchase order status: {{ data.status }} <v-btn color="primary" @click="hold">Hold</v-btn> <v-btn v-if="this.hasOutOfStockProduct == false" color="primary" @click="ship">ship</v-btn> <v-btn color="error" @click="vcancel">Cancel</v-btn>
+            Purchase order status: {{ data.status }} <v-btn color="primary" @click="hold">Hold</v-btn> <v-btn v-if="this.hasOutOfStockProduct == false" color="primary" @click="ship">ship</v-btn><v-btn v-else depressed disabled>ship</v-btn> <v-btn color="error" @click="vcancel">Cancel</v-btn>
             <p style="color:red;" v-if="this.hasOutOfStockProduct == true">Product (id: {{ this.outOfStockProduct }}) is out of stock, you cannot ship this order now.</p>
           </div>
 
@@ -39,7 +39,7 @@
             Customer name: {{ data.fName }}<br>
             Address: {{ data.address }}<br>
             Total amount: {{ data.totalAmount }}<br>    
-            Purchase order status: {{ data.status }} <v-btn v-if="this.hasOutOfStockProduct == false" color="primary" @click="ship">ship</v-btn> <v-btn color="error" @click="vcancel">Cancel</v-btn>
+            Purchase order status: {{ data.status }} <v-btn v-if="this.hasOutOfStockProduct == false" color="primary" @click="ship">ship</v-btn><v-btn v-else depressed disabled>ship</v-btn> <v-btn color="error" @click="vcancel">Cancel</v-btn>
             <p style="color:red;" v-if="this.hasOutOfStockProduct == true">Product (id: {{ this.outOfStockProduct }}) is out of stock, you cannot ship this order now.</p>
           </div>
         </div>
@@ -105,6 +105,7 @@ export default {
                         this.hasOutOfStockProduct = true
                     }
                 }
+                console.log(this.hasOutOfStockProduct)
                 this.outOfStockProduct = temp.join(', ')
             })
         },
