@@ -452,6 +452,8 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
       || req.body.qunantity == undefined) {
       return res.sendStatus(400);
     }
+
+    
   
     let values = {
       $userID: req.body.userID,
@@ -460,7 +462,18 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
       $total: req.body.total
     };
     
+    const q = `UPDATE Shopping_cart SET quantity = quantity + $qunantity WHERE userID = $userID AND productID = $productID`;
+
     try {
+      const q1 = `SELECT * FROM Shopping_cart WHERE userID = ${req.body.userID} AND productID = ${req.body.productID}`
+      const r = await db.all(q1)
+      if (r[0] != undefined) {
+        const q2 = `UPDATE Shopping_cart SET quantity = quantity + 1 WHERE userID = ${req.body.userID} AND productID = ${req.body.productID}`
+        await db.all(q2)
+        res.status(200).json()
+        return
+      }
+
       const q = `INSERT INTO Shopping_cart (userID, productID, quantity, total) VALUES ($userID, $productID, $qunantity, $total)`;
       const result = await db.run(q, values);
 

@@ -9,7 +9,7 @@
             Address: {{ data.address }}<br>
             Total amount: {{ data.totalAmount }}<br>    
             Purchase order status: {{ data.status }}<br>
-            Cancel data: {{ data.statusDate }}<br>
+            Cancel date: {{ data.statusDate }}<br>
             Cancel by: {{ data.cancelBy }}
           </div>
 
@@ -20,7 +20,7 @@
             Address: {{ data.address }}<br>
             Total amount: {{ data.totalAmount }}<br>    
             Purchase order status: {{ data.status }}<br>
-            Shipment data: {{ data.statusDate }}<br>
+            Shipment date: {{ data.statusDate }}<br>
           </div>
 
           <div class="text-h6 mb-1" v-else-if="data.status == 'pending'">
