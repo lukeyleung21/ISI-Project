@@ -205,12 +205,21 @@ api.get('/shop', async (req, res) => {              //products listing
       $electricalPlug: req.body.electricalPlug,
       $outOfStock: 'F'
     }
-
     
     try {
       const q = `INSERT INTO Product (name, brand, price, voltage, electricalPlug, image, outOfStock) VALUES ($name, $brand, $price, $voltage, $electricalPlug, $image, $outOfStock)`;
       const result =await db.run(q, value);
-      var userData = { productID: result.lastID}
+      var userData = { productID: result.lastID};
+
+      let comment = {
+        $number: '1',
+        $score: '3',
+        $productID: userData.productID
+      };
+
+      const q1 = 'INSERT INTO Rating(productID, score, number) VALUES ($productID, $score, $number)';
+      const result1 = await db.run(q1, comment);
+      var userDatas = {ratingID: result1.lastID}
       res.status(200).json(userData);
     } catch (err) {
       res.status(500).json(err);
@@ -585,6 +594,20 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     //};
 
     try {
+      const q1 = 'SELECT outOfStock FROM Product p, Shopping_cart sc WHERE p.productID = sc.productID';
+      const result1 = await db.all(q1);
+      for(let x in result1){
+        if(result1[x].outOfStock == 'T'){
+          values = {
+            $userID: req.params.userID,
+            $total_amount: req.body.total_amount,
+            $status: 'hold',
+            $purchaseDate: today,
+            $statusDate: today,
+            $cancelBy: undefined,
+          };
+        }
+      }
       const q = 'INSERT INTO Purchase_Order (userID, totalAmount, purchaseDate, status, statusDate, cancelBy) VALUES ($userID, $total_amount, $purchaseDate, $status, $statusDate, $cancelBy)';
       const result = await db.run(q, values);
       console.log("here");
