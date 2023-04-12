@@ -39,10 +39,10 @@
         <v-row>ElectricalPlug:</v-row>
             <v-row><select v-model="electricalPlug">
                 <option disabled value="">Please select one</option>
-                <option>A</option>
-                <option>B</option>
-                <option>C</option>
-                <option>E</option>
+                <option>American standard plug</option>
+                <option>British specification plug</option>
+                <option>Chinese standard plug</option>
+                <option>European standard plug</option>
             </select></v-row>
       </v-col>
       <v-col lg="4">
@@ -85,23 +85,32 @@ export default {
        }     
     },
     methods: {
-
         Addtoproduct() {
-            const url = 'http://localhost:8000/AddProduct'
-            fetch(url , {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: this.name, brand: this.brand, price: this.price, voltage: this.voltage, electricalPlug: this.electricalPlug, image: this.imagelink })
-            })
-            .then((response) => {
-                if (response.status == 200) {
-                    this.success = true
-                    this.fail = false
-                    router.push("/");
-                } else {
-                    this.fail = true
-                }
-            })
+          if (this.electricalPlug == 'American standard plug') {
+            this.electricalPlug = 'A'
+          } else if (this.electricalPlug == 'British specification plug') {
+            this.electricalPlug = 'B'
+          } else if (this.electricalPlug == 'Chinese standard plug') {
+            this.electricalPlug = 'C'
+          } else if (this.electricalPlug == 'European standard plug') {
+            this.electricalPlug = 'E'
+          }
+
+          const url = 'http://localhost:8000/AddProduct'
+          fetch(url , {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: this.name, brand: this.brand, price: this.price, voltage: this.voltage, electricalPlug: this.electricalPlug, image: this.imagelink })
+          })
+          .then((response) => {
+              if (response.status == 200) {
+                  this.success = true
+                  this.fail = false
+                  router.push("/");
+              } else {
+                  this.fail = true
+              }
+          })
         }
     }
 }

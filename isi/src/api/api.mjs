@@ -594,10 +594,11 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
     //};
 
     try {
-      const q1 = 'SELECT outOfStock FROM Product p, Shopping_cart sc WHERE p.productID = sc.productID';
+      const q1 = 'SELECT userID, outOfStock FROM Product p, Shopping_cart sc WHERE p.productID = sc.productID';
       const result1 = await db.all(q1);
+      console.log(result1)
       for(let x in result1){
-        if(result1[x].outOfStock == 'T'){
+        if(result1[x].outOfStock == 'T' && result1[x].userID == req.params.userID){
           values = {
             $userID: req.params.userID,
             $total_amount: req.body.total_amount,
