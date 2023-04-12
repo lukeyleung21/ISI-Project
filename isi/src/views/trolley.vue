@@ -36,7 +36,7 @@
             <td>{{ Totalnumber }}</td>
           </tr>
           <tr>
-            <td><v-btn @click="Pushtopurchase(userData)">Confirm</v-btn></td>
+            <td><v-btn @click="Pushtopurchase(userData)">Check Out</v-btn></td>
           </tr>
         </tbody>
       </v-simple-table>

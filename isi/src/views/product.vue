@@ -88,7 +88,20 @@ export default {
     },
     methods: {
         loadData:async function() {
-            fetch(api + this.productID).then((res)=>res.json()).then((data)=>this.item=data);
+            fetch(api + this.productID).then((res)=>res.json()).then((data)=> {
+              for (var x in data) {
+                if (data[x].electricalPlug == 'A') {
+                  data[x].electricalPlug = 'American standard plug'
+                } else if (data[x].electricalPlug == 'B') {
+                  data[x].electricalPlug = 'British specification plug'
+                } else if (data[x].electricalPlug == 'C') {
+                  data[x].electricalPlug = 'Chinese standard plug'
+                } else if (data[x].electricalPlug == 'E') {
+                  data[x].electricalPlug = 'European standard plug'
+                }
+              }
+              this.item=data
+            });
             Promise.all([fetch(rate + this.productID).then((res)=>res.json()),fetch(comment+this.productID).then((res)=>res.json())])     
   .then(([rate,comment]) => {
     console.log(rate)
