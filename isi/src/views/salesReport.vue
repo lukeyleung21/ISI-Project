@@ -1,11 +1,32 @@
 <template>
-    <v-cotainer>
-    <v-btn outlined @click="toThirty()">Default (30 Days)</v-btn>&nbsp;
-    <v-text-field v-model="searchText" label="Report period within how many days" id="serach" data-search>
-        <template #append><v-btn color="secondary" type="submit" value="Subscribe" @click="search()">Check</v-btn></template>
-    </v-text-field>
-    <v-data-table :headers="headers" :items="displayData" :items-per-page="5" class="elevation-1" :sort-by="['quantity']" :sort-desc="[true]"></v-data-table>
-    </v-cotainer>
+    <v-container>
+        <v-row>
+        <v-col cols="12" sm="6" md="4">
+            <v-menu v-model="menu1" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
+            <template v-slot:activator="{ on, attrs }">
+                <v-text-field v-model="date1" label="Report period starts from" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"></v-text-field>
+            </template>
+            <v-date-picker v-model="date1" @input="menu2 = false"></v-date-picker>
+            </v-menu>
+        </v-col>
+
+        <v-col cols="12" sm="6" md="4">
+            <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
+            <template v-slot:activator="{ on, attrs }">
+                <v-text-field v-model="date2" label="Report period ends on" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"></v-text-field>
+            </template>
+            <v-date-picker v-model="date2" @input="menu2 = false"></v-date-picker>
+            </v-menu>
+        </v-col>
+
+        <v-col cols="12" sm="6" md="4"><v-btn color="secondary" type="submit" value="Subscribe" @click="search()">Check</v-btn></v-col>
+
+        <v-spacer></v-spacer>
+        </v-row>
+
+        <v-data-table :headers="headers" :items="displayData" :items-per-page="10" class="elevation-1" :sort-by="['quantity']" :sort-desc="[true]"></v-data-table>
+
+    </v-container>
     
   </template>
 
@@ -14,12 +35,11 @@ import router from '@/router'
 
 export default {
     data: () => ({
-        orderData: [],
-        thirtyData: [],
-        searchData: [],
-        displayData: [],
-        searchText: '',
-        headers: [
+      date1: '',
+      date2: '',
+      menu1: false,
+      menu2: false,
+      headers: [
           {
             text: 'Product',
             align: 'start',
@@ -30,6 +50,8 @@ export default {
           { text: 'Amount', value: 'amount' },
 
         ],
+        orderData: [],
+        displayData: [],
     }),
     async created(){
         await this.checkUser();
@@ -41,39 +63,36 @@ export default {
                 router.push("/");
             } 
         },
+        setDate() {
+            var monthAgo = new Date()
+            monthAgo.setDate(monthAgo.getDate() - 30)
+            this.date1 = monthAgo.toISOString().substr(0, 10)
+            this.date2 = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
+        },
         loadData:async function() {
+            this.setDate()
+
             const url = 'http://localhost:8000/salesReport/'
             fetch(url)
             .then((response) => response.json())
             .then((data) => { 
                 this.orderData = data
-
-                this.thirtyData = this.check(30)
-                this.displayData = this.thirtyData             
+                this.search() 
             });
         },
-        check(day) {
-            var time = new Date()
-            var time_ts = time.getTime()
-            time.setTime(time_ts - day * 24 * 60 * 60 * 1000)
-
-            let year = time.getFullYear();
-            let month = time.getMonth();
-            month = ('0' + (month + 1)).slice(-2);
-            let date = time.getDate();
-            date = ('0' + date).slice(-2);
-            const time_text = `${year}/${month}/${date}`;
-
+        search() {
+            var start = this.date1.replace(/-/g, "/")
+            var end = this.date2.replace(/-/g, "/")
             var tempList = []
+            var r1 = {}
+            var r2 = {}
+            var result = []
 
             for (var x in this.orderData) {
-                if (this.orderData[x].purchaseDate > time_text) {
+                if (this.orderData[x].purchaseDate >= start && this.orderData[x].purchaseDate <= end) {
                     tempList.push(this.orderData[x])
                 }
             }
-            
-            var r1 = {}
-            var r2 = {}
 
             tempList.forEach(item => {
                 if(r1[item.name]){
@@ -82,7 +101,6 @@ export default {
                     r1[item.name] = item.quantity;
                 }
             })
-
             tempList.forEach(item => {
                 if(r2[item.name]){
                     r2[item.name] += item.amount;
@@ -91,7 +109,6 @@ export default {
                 }
             })
 
-            var result = [];
             for(let x in r1){
                 for (let y in r2) {
                     if (x == y) {
@@ -100,15 +117,9 @@ export default {
                 }
             }
 
-            return(result)
+            this.displayData = result
         },
-        toThirty() {
-            this.displayData = this.thirtyData
-        },
-        search() {
-            console.log(this.searchText)
-            this.displayData = this.check(parseInt(this.searchText))
-        },
+        
     },
     
 }
