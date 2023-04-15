@@ -68,11 +68,6 @@ const routes = [
     component: ()=> import('../views/changePassword.vue')
   },
   {
-    path:'/test',
-    name:'test',
-    component: ()=> import('../views/test.vue')
-  },
-  {
     path:'/changeInformation/:productID',
     name:'changeInformation',
     props: true,
