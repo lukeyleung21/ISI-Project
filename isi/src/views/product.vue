@@ -104,8 +104,6 @@ export default {
             });
             Promise.all([fetch(rate + this.productID).then((res)=>res.json()),fetch(comment+this.productID).then((res)=>res.json())])     
   .then(([rate,comment]) => {
-    console.log(rate)
-    console.log(comment)
     this.score = rate[0].score
     comment.forEach(element => {
       if(element.times!=0){this.comment.push(element);};})

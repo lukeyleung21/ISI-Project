@@ -5,7 +5,7 @@
   <h1>Electric Appliance Shop🛒</h1>
   </v-col>
   <v-col justify="end" v-if="this.$store.getters.userType == '0'">
-    <v-text-field label="Search" id="search" data-search @input="searchID()"></v-text-field>
+    <v-text-field label="Search" id="search" data-search></v-text-field>
   </v-col>
   </v-row>
   <v-divider></v-divider>
@@ -86,36 +86,16 @@
         </div>
       </v-col>
   </v-row>
-   
-  
-  
-      <v-divider></v-divider>
+  <v-divider></v-divider>
   <!-- lower part -->
       <v-card-title>  
       <v-col lg="7">
       <p v-if="item.outOfStock=='F'">Product Avaliable</p>
       <p v-else>Out Of Stock</p></v-col>
       <v-col>
-      <v-btn
-    color="secondary"
-    elevation="3"
-    outlined
-    rounded
-    @click=toDetail(item.productID)
-    x-large
-  >Detail</v-btn></v-col>
+      <v-btn color="secondary" elevation="3" outlined rounded @click=toDetail(item.productID) x-large>Detail</v-btn></v-col>
       </v-card-title>
-      <v-rating
-  background-color="green lighten-2"
-  color="warning"
-  hover
-  length="5"
-  readonly
-  size="30"
-  :value=item.rate
-  class="ml-16"
-  half-increments
-></v-rating>
+      <v-rating background-color="green lighten-2" color="warning" hover length="5" readonly size="30" :value=item.rate class="ml-16" half-increments></v-rating>
   </v-card>
   
   </v-row>
@@ -228,23 +208,6 @@
         router.push(`/product/${x}`)
       },
   
-      searchID() {
-        //this.items = this.value
-        //console.log(this.value)
-        /*this.page=1
-        this.search=[[]]
-        let count = 0,countT=0
-        for(let x=0;x<this.items.length;x++){
-          
-          if(this.items[x].productID == this.product_ID[0]){
-            
-            if(count>=6){count=0;countT++;this.search[countT]=[]}
-            this.search[countT].push(this.items[x])
-            count+=1
-        }}
-        console.log(this.product_ID[0])
-        this.length_of_item=(Math.ceil(this.search.length))*/
-      },
       async ToAddProduct(){
         router.push(`/AddProduct`)
       },
@@ -270,7 +233,6 @@
             count+=1
         }
         this.length_of_item=(Math.ceil(this.search.length))
-        console.log(this.search)
           }
         }
         else{
@@ -297,4 +259,4 @@
       }}
     }
 };
-  </script>
+  </script> 

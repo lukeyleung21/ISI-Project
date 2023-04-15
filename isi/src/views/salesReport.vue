@@ -19,7 +19,11 @@
             </v-menu>
         </v-col>
 
-        <v-col cols="12" sm="6" md="4"><v-btn color="secondary" type="submit" value="Subscribe" @click="search()">Check</v-btn></v-col>
+        <v-col cols="12" sm="6" md="4">
+            <v-btn color="secondary" type="submit" value="Subscribe" @click="search()">Check</v-btn> &nbsp;
+            <v-btn color="secondary" type="submit" value="Subscribe" @click="defaultSearch()">To Default (Last 30 days)</v-btn>
+        </v-col>
+        
 
         <v-spacer></v-spacer>
         </v-row>
@@ -100,8 +104,7 @@ export default {
                 }else{
                     r1[item.name] = item.quantity;
                 }
-            })
-            tempList.forEach(item => {
+
                 if(r2[item.name]){
                     r2[item.name] += item.amount;
                 }else{
@@ -119,6 +122,10 @@ export default {
 
             this.displayData = result
         },
+        defaultSearch() {
+            this.setDate()
+            this.search()
+        }
         
     },
     

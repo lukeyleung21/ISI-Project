@@ -228,7 +228,7 @@ api.get('/shop', async (req, res) => {              //products listing
 
   api.patch('/changeStock/:productID', async(req,res) =>{
     if (req.params.productID == undefined) {return res.sendStatus(400);}
-    if(req.body.outOfStock == 'T' ){req.body.outOfStock = "F"}
+    if(req.body.outOfStock == 'T'){req.body.outOfStock = "F"}
     const value ={
       productID: parseInt(req.params.productID),
       $outOfStock : req.body.outOfStock
@@ -598,18 +598,10 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
       $cancelBy: undefined,
     };
 
-    //let value ={
-    //  $POID: userData.POID,
-    //  $productID: req.body.productID,
-    //  $price: req.body.price,
-    //  $quantity: req.body.quantity,
-    //  $amount: undefined
-    //};
-
     try {
       const q1 = 'SELECT userID, outOfStock FROM Product p, Shopping_cart sc WHERE p.productID = sc.productID';
       const result1 = await db.all(q1);
-      console.log(result1)
+
       for(let x in result1){
         if(result1[x].outOfStock == 'T' && result1[x].userID == req.params.userID){
           values = {
@@ -624,7 +616,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
       }
       const q = 'INSERT INTO Purchase_Order (userID, totalAmount, purchaseDate, status, statusDate, cancelBy) VALUES ($userID, $total_amount, $purchaseDate, $status, $statusDate, $cancelBy)';
       const result = await db.run(q, values);
-      console.log("here");
+
       var userData = { POID: result.lastID, userID: req.params.userID}
       
       let $POID = userData.POID;
@@ -761,8 +753,6 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
   api.post('/pushtopurchase/:userID', async (req,res) => { 
     if (req.params.userID == undefined) {return res.sendStatus(400); }
     if (req.body.total_amount == undefined) {return res.sendStatus(400);}
-
-    console.log("1")
     
     const dateObj = new Date();
     let year = dateObj.getFullYear();
@@ -781,18 +771,9 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
       $cancelBy: undefined,
     };
 
-    //let value ={
-    //  $POID: userData.POID,
-    //  $productID: req.body.productID,
-    //  $price: req.body.price,
-    //  $quantity: req.body.quantity,
-    //  $amount: undefined
-    //};
-
     try {
       const q = 'INSERT INTO Purchase_Order (userID, totalAmount, purchaseDate, status, statusDate, cancelBy) VALUES ($userID, $total_amount, $purchaseDate, $status, $statusDate, $cancelBy)';
       const result = await db.run(q, values);
-      console.log("here");
       var userData = { POID: result.lastID, userID: req.params.userID}
       
       let $POID = userData.POID;
@@ -882,6 +863,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
         $productID: parseInt(req.params.productID)
       }
       
+      const q2 = `UPDATE Rating SET score = $score, number = $number WHERE productID = $productID`;
       var result2 = await db.run(q2, value2);
       
       var result3 = await db.run(q3, value);

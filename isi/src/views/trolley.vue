@@ -81,7 +81,6 @@ export default {
         
         del: function(item){
             const url = 'http://localhost:8000/delitem/'
-            console.log("here")
             fetch(url + this.$store.getters.userID, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},

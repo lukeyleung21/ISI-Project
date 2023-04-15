@@ -86,12 +86,19 @@ export default {
     },
     methods: {
         checkUser:async function() {
+            if (this.$store.getters.userType == '1') {
+                router.push("/purchaseTracking")
+            } else if (this.$store.getters.userType == '2') {
+                router.push("/login");
+            }
+
             fetch('http://localhost:8000/trackingDetailUser/' + this.POID)
                 .then(response => response.json())
                 .then(data => {
-                    for (var x in data) { this.data = data[x] }
+                    for (var x in data) { 
+                        this.data = data[x] 
+                    }
                 })
-
         },
         loadData:async function() {
             fetch('http://localhost:8000/trackingDetail/' + this.POID)
@@ -105,7 +112,9 @@ export default {
                         this.hasOutOfStockProduct = true
                     }
                 }
-                console.log(this.hasOutOfStockProduct)
+
+                temp = temp.sort()
+
                 this.outOfStockProduct = temp.join(', ')
             })
         },
