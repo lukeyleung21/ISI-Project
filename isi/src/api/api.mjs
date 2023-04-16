@@ -789,7 +789,7 @@ api.get('/purchaseOrder', async(req, res) => {         //Vendor purchase order
   });
 
   api.get('/salesReport/', async (req, res) => {              //sales report
-    const q = `SELECT p.productID, p.name, po.purchaseDate, SUM(poi.quantity) AS quantity, SUM(poi.amount) AS amount FROM Product p, Purchase_Order po, Purchase_Order_Item poi WHERE p.productID = poi.productID and po.POID = poi.POID GROUP BY p.name, po.purchaseDate`;
+    const q = `SELECT p.productID, p.name, po.purchaseDate, SUM(poi.quantity) AS quantity, SUM(poi.amount) AS amount FROM Product p, Purchase_Order po, Purchase_Order_Item poi WHERE p.productID = poi.productID AND po.POID = poi.POID AND po.status = 'shipped' GROUP BY p.name, po.purchaseDate`;
     try {
       const result = await db.all(q);
       res.json(result);
