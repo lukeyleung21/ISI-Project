@@ -71,7 +71,7 @@
   <v-divider></v-divider>
   <v-row>
   
-  <v-card v-for="item in search[this.page-1]" max-width="400" class="mx-16 my-15">
+  <v-card v-for="item in search[this.page-1]" max-width="400" class="mx-16 my-15" v-bind:key="item.productID">
   <v-img :src= item.image></v-img>
       <v-row>
         <v-col lg="8"><v-card-title>{{ item.name }}</v-card-title>
